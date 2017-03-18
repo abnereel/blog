@@ -1,2 +1,2 @@
 # blog
-第一次用node写的个人blog
+初次接触node，用node+express+mongodb写的个人blog，还未完成，不断完善中...
