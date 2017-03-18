@@ -1,0 +1,38 @@
+<%- include ../header %>
+
+<div class="menu-style">
+    <nav class="inner-nav">
+        <ul class="nav nav-pills">
+            <li role="presentation" class="active"><a href="/admin/post">所有文章</a></li>
+            <li role="presentation"><a href="/admin/post/add">添加文章</a></li>
+        </ul>
+    </nav>
+
+    <%- include ../components/notification %>
+
+    <div class="post-list">
+        <ul>
+            <li class="clearfix">
+                <span class="post-title">标题</span>
+                <span class="post-del">删除</span>
+                <span class="post-edit">编辑</span>
+                <span class="post-status">状态</span>
+                <span class="post-releaseTime">发布时间</span>
+                <span class="post-category">分类</span>
+            </li>
+            <% for (var post of posts) { %>
+            <li class="clearfix">
+                <span class="post-title"><%= post.title %></span>
+                <a class="post-del" href="javascript:void(0);" onclick="confirm(this)" url="/admin/post/del/<%= post._id %>">删除</a>
+                <a class="post-edit" href="/admin/post/edit/<%= post._id %>">编辑</a>
+                <span class="post-status"><%= post.status ? '显示' : '隐藏' %></span>
+                <span class="post-releaseTime"><%= post.date %></span>
+                <span class="post-category"><%= post.category.name %></span>
+            </li>
+            <% } %>
+        </ul>
+    </div>
+</div>
+<%- include ../components/dialog-confirm %>
+<%- include ../footer %>
+

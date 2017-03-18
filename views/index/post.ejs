@@ -1,0 +1,17 @@
+<%- include header %>
+
+<div class="home">
+    <div class="container clearfix">
+        <div class="home-left">
+            <% for (var post of posts) { %>
+                <%- include ./components/post-content %>
+            <% } %>
+        </div>
+        <div class="home-right">
+            <%- include ./components/introduce %>
+        </div>
+    </div>
+</div>
+
+
+<%- include footer %>

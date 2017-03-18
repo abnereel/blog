@@ -1,0 +1,116 @@
+<%- include ../header %>
+
+<div class="menu-style">
+    <nav class="inner-nav">
+        <ul class="nav nav-pills">
+            <li role="presentation"><a href="/admin/post">所有文章</a></li>
+            <li role="presentation" class="active"><a href="/admin/post/add">添加文章</a></li>
+        </ul>
+    </nav>
+
+    <%- include ../components/notification %>
+
+    <div class="post-add">
+        <form method="post">
+            <div class="input-block clearfix">
+                <label for="category">文章分类</label>
+                <select name="category" id="category">
+                    <% for (var item of nav) { %>
+                        <option value="<%= item._id %>"><%= item.name %></option>
+                        <% for (var vo of item.sub) { %>
+                            <option value="<%= vo._id %>">&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|——<%= vo.name %></option>
+                        <% } %>
+                    <% } %>
+                </select>
+            </div>
+
+            <div class="input-block clearfix">
+                <label for="title">文章标题</label>
+                <input type="text" name="title" id="title" placeholder="请输入标题">
+            </div>
+
+            <div class="input-block clearfix">
+                <label for="releaseTime">发布时间</label>
+                <input type="text" name="releaseTime" id="datetimepicker">
+            </div>
+
+            <div class="input-block clearfix">
+                <label for="keywords">关键词</label>
+                <input type="text" name="keywords" id="keywords" placeholder="请输入关键字，多个关键字以空格分开">
+            </div>
+
+            <div class="input-block clearfix">
+                <label for="source">文章来源</label>
+                <input type="text" name="source" id="source" placeholder="请输入文章来源，若无可为空">
+            </div>
+
+            <!--<div class="input-block clearfix input-block-file">
+                <label for="title">上传图片</label>
+                <div class="div-file clearfix">
+                    <div class="customFile">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        <span>上传图片</span>
+                    </div>
+                    <input type="file" name="imgPath" accept="image/*" id="fileupload" class="input-file">
+                </div>
+                <div class="imgList" id="imgList"></div>
+            </div>-->
+
+            <div class="input-block clearfix">
+                <label for="excerpt">文章摘要</label>
+                <textarea name="excerpt" id="excerpt" placeholder="请输入摘要，若无可为空"></textarea>
+            </div>
+
+            <div class="input-block clearfix">
+                <label for="content">文章内容</label>
+                <div id="editor" name="content"></div>
+            </div>
+
+            <div class="input-block clearfix">
+                <input class="submit" type="submit" value="添加">
+                <a class="goback" href="/admin/post">返回</a>
+            </div>
+        </form>
+    </div>
+</div>
+<%- include ../components/dialog-confirm %>
+<%- include ../footer %>
+<link href="/javascripts/jquery-ui/jquery-ui.min.css" rel="stylesheet" />
+<link href="/javascripts/datetimepicker/jquery-ui-timepicker-addon.css" rel="stylesheet" />
+<script src="/javascripts/jquery-ui/jquery-ui.min.js"></script>
+<script src="/javascripts/datetimepicker/jquery-ui-timepicker-addon.js"></script>
+<script src="/javascripts/datetimepicker/jquery-ui-timepicker-zh-CN.js"></script>
+<script src="/javascripts/ueditor/ueditor.config.js"></script>
+<script src="/javascripts/ueditor/ueditor.all.min.js"> </script>
+<script src="/javascripts/ueditor/lang/zh-cn/zh-cn.js"></script>
+<script>
+    /*$("#fileupload").on("change", function () {
+        $("#imgList").html("");
+        var length = this.files.length;
+        var files = this.files;
+        for (var i=0; i<length; i++) {
+            if (files[i].size > 1024*1024*10) {
+                alert('图片大小不能超过10M');
+                return false;
+            }
+
+            //获取window的URL工具
+            var URL = window.URL || window.webkitURL;
+            var imgUrl = URL.createObjectURL(files[i]);
+            $("#imgList").append($("<img/>").attr("src", imgUrl));
+        }
+    });
+
+    $("#imgList").on("click", "img", function () {
+       if ($(this).hasClass("curr")) {
+           $(this).removeClass("curr");
+       } else {
+           $(this).addClass("curr");
+       }
+    });*/
+
+    $(function () {
+        $('#datetimepicker').prop("readonly", true).datetimepicker();
+        var ue = UE.getEditor('editor');
+    });
+</script>

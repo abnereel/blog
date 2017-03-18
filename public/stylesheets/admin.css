@@ -1,0 +1,544 @@
+body {
+    font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+    background: #F1F2F7;
+}
+* {
+    margin: 0;
+    padding: 0;
+}
+a,a:hover,a:link,a:active,a:visited {
+    color: #333333;
+    text-decoration: none;
+}
+ul {
+    list-style: none;
+}
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    visibility: hidden;
+    clear: both;
+}
+
+/*------------ home ------------*/
+.container {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.page-top {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1002;
+    width: 100%;
+    height: 60px;
+    line-height: 60px;
+    background: #ffffff;
+    padding: 0 15px;
+}
+.page-top > .top-left {
+    float: left;
+    height: 24px;
+    line-height: 24px;
+    font-size: 24px;
+    margin: 18px 0;
+}
+.page-top > .top-left > #nav-button {
+    float: left;
+    cursor: pointer;
+    color: #aeb2b7;
+}
+.page-top > .top-left > .about {
+    float: left;
+    display: inline-block;
+    margin-left: 15px;
+}
+.page-top > .top-right {
+    float: right;
+
+}
+.page-top > .top-right > .userinfo {
+    float: right;
+    height: 44px;
+    line-height: 44px;
+    padding: 6px;
+    border: 1px solid #f0f0f8;
+    margin: 8px 0;
+    cursor: pointer;
+}
+.page-top > .top-right > .userinfo > .pic {
+    float: left;
+    width: 30px;
+    height: 30px;
+}
+.page-top > .top-right > .userinfo > .name {
+    float: left;
+    display: block;
+    height: 30px;
+    line-height: 30px;
+    margin-left: 5px;
+}
+.page-top > .top-right > .userinfo > .glyphicon-triangle-bottom {
+    float: left;
+    display: block;
+    font-size: 12px;
+    margin: 8px 0 8px 5px;
+}
+.page-left {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1001;
+    width: 210px;
+    height: 100%;
+    background: #283543;
+    color: #ffffff;
+}
+.page-left a {
+    color: #aeb2b7;
+}
+.page-left .nav-collapse > .ul-first {
+    margin-top: 75px;
+}
+.page-left .nav-collapse > .ul-first > li {
+    width: 190px;
+    margin: 5px 10px;
+}
+.page-left .nav-collapse > .ul-first > li:hover,
+.page-left .nav-collapse > .ul-first > li.curr {
+    background: #33404F;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.page-left .nav-collapse > .ul-first > li > a {
+    display: block;
+    padding: 15px;
+}
+.page-left .nav-collapse > .ul-first > li > a > span {
+    float: left;
+    display: block;
+    font-size: 14px;
+    height: 14px;
+    line-height: 14px;
+    color: #aeb2b7;
+}
+.page-left .nav-collapse > .ul-first > li.curr > a > span:first-child {
+    color: #34a853;
+}
+.page-left .nav-collapse > .ul-first > li > a > span.menu-text {
+    margin: 2px 0 0 10px
+}
+.page-left .nav-collapse > .ul-first > li.curr > a > span.menu-text {
+    color: #ffffff;
+}
+.page-left .nav-collapse > .ul-first > li > a > span:last-child {
+    float: right;
+}
+.page-left .nav-collapse .ul-second {
+    display: none;
+    margin-left: 40px;
+    padding: 10px 0;
+}
+.page-left .nav-collapse .ul-second.curr {
+    display: block;
+}
+.page-left .nav-collapse .ul-second > li {
+    padding: 10px 0;
+}
+
+.page-left .nav-collapse .ul-second > li > a {
+    display: block;
+}
+.page-left .nav-collapse .ul-second > li.curr > a {
+    color: #34a853;
+}
+
+.page-left .nav-collapse .ul-second > li > a:hover {
+    color: #34a853;
+}
+.page-main {
+    width: 100%;
+    height: 100%;
+    padding-left: 210px;
+}
+.page-main > .warpper {
+    margin-top: 60px;
+    padding: 15px;
+}
+/*------------ bootstrap 被修改部分 ------------*/
+.nav-pills > li {
+    margin-right: 10px;
+}
+.nav-pills > li.active > a,
+.nav-pills > li.active > a:focus,
+.nav-pills > li.active > a:hover {
+    background: #34a853;
+}
+
+.nav-pills > li > a,
+.nav-pills > li > a:focus,
+.nav-pills > li > a:hover {
+    background: #33404F;
+    color: #aeb2b7;
+}
+
+
+
+.inner-nav {
+    height: 60px;
+    border-bottom: 1px solid #aeb2b7;
+}
+/*------------ components ------------*/
+.success {
+    margin: 20px 0;
+    color: #34a853;
+}
+.success > span {
+    float: left;
+    font-size: 24px;
+    height: 24px;
+    line-height: 24px;
+    margin-right: 5px;
+}
+.error {
+    margin: 20px 0;
+    color: #f00000;
+}
+.error > span {
+    float: left;
+    font-size: 24px;
+    height: 24px;
+    line-height: 24px;
+    margin-right: 5px;
+}
+.dialog-confirm {
+    display: none;
+    position: absolute;
+    z-index: 999999;
+    left: 50%;
+    top: 50%;
+    width: 400px;
+    height: 250px;
+    background: #33404F;
+    border-radius: 4px;
+    margin-top: -200px;
+    margin-left: -225px;
+}
+.dialog-confirm > .message {
+    text-align: center;
+    color: #ffffff;
+    font-size: 22px;
+    line-height: 24px;
+    padding-top: 40px;
+}
+.dialog-confirm > .btnButton {
+    margin-top: 50px;
+}
+.dialog-confirm > .btnButton > button {
+    width: 100px;
+    height: 40px;
+    float: left;
+    margin: 0 50px;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+}
+.dialog-confirm > .btnButton > button.sure {
+    background: #34a853;
+}
+.dialog-confirm > .btnButton > button.cancel {
+    background: #F0AD4E;
+}
+/*------------ 内页 ------------*/
+.menu-add {
+    margin: 30px 0 0 0px;
+}
+.menu-add > form > div {
+    margin-bottom: 30px;
+    height: 40px;
+    line-height: 40px;
+}
+.menu-add > form > div > select,
+.menu-add > form > div > input {
+    width: 300px;
+    height: 40px;
+    line-height: 40px;
+    text-indent: 10px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    margin-left: 20px;
+    background: #F8F8F8;
+}
+.menu-add > form > div > input.submit {
+    float: left;
+    width: 100px;
+    background: #34a853;
+    color: #ffffff;
+    margin-left: 0;
+}
+.menu-add > form > div > label {
+    width: 70px;
+    text-align: right;
+}
+.menu-add > form > div > .goback {
+    float: left;
+    display: block;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    background: #F0AD4E;
+    color: #ffffff;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    margin-left: 20px;
+    text-align: center;
+}
+.menu-list > ul > li {
+    margin-bottom: 15px;
+    background: #cccccc;
+    height: 30px;
+    line-height: 30px;
+    min-width: 1000px;
+}
+.menu-list > ul > li > a,
+.menu-list > ul > li > span {
+    display: block;
+    overflow: hidden;
+    text-align: center;
+    margin-right: 15px;
+}
+.menu-list > ul > li > a {
+    background: #34a853;
+    color: #ffffff;
+    -webkit-border-radius: 4px;;
+    -moz-border-radius: 4px;;
+    border-radius: 4px;
+}
+.menu-list > ul > li > .menu-icon {
+    float: left;
+    margin-left: 15px;
+}
+.menu-list > ul > li > .menu-name {
+    float: left;
+    width: 400px;
+    text-align: left;
+    margin-left: 15px;
+}
+.menu-list > ul > li > .menu-listOrder {
+    float: right;
+    width: 40px;
+}
+.menu-list > ul > li > .menu-status {
+    float: right;
+    width: 40px;
+}
+.menu-list > ul > li > .menu-edit {
+    float: right;
+    width: 50px;
+}
+.menu-list > ul > li > .menu-del {
+    float: right;
+    width: 50px;
+}
+.menu-list > ul > li > .li-second {
+    text-indent: 40px;
+}
+.post-add {
+    margin-top: 30px;
+}
+.post-add .input-block {
+    width: 1000px;
+    margin-bottom: 20px;
+}
+.post-add .input-block > label {
+    float: left;
+    width: 80px;
+    text-align: right;
+    height: 40px;
+    line-height: 40px;
+}
+.post-add .input-block > select,
+.post-add .input-block > input {
+    float: left;
+    width: 300px;
+    height: 40px;
+    line-height: 40px;
+    text-indent: 10px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border: 1px solid #cccccc;
+    margin-left: 20px;
+    background: #F8F8F8;
+}
+.post-add .input-block-file > .div-file {
+    position: relative;
+    top: 0;
+    left: 100px;
+    width: 900px;
+}
+.post-add .input-block-file > .div-file > .customFile {
+    position: absolute;
+    z-index: 0;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    background: #34a853;
+    text-align: center;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.post-add .input-block-file > .div-file > .customFile > span {
+    color: #ffffff;
+}
+.post-add .input-block-file > .div-file > .input-file {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    opacity: 0;
+    cursor: pointer;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.post-add .input-block-file > .imgList {
+    position: relative;
+    margin-left: 100px;
+    width: 900px;
+}
+.post-add .input-block-file > .imgList > img {
+    float: left;
+    width: 130px;
+    height: 130px;
+    margin-right: 24px;
+    margin-bottom: 20px;
+}
+.post-add .input-block-file > .imgList > img:nth-child(6n+6) {
+    margin-right: 0;
+}
+.post-add .input-block > textarea {
+    float: left;
+    width: 100%;
+    max-width: 900px;
+    margin-left: 20px;
+    border: 1px solid #cccccc;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    line-height: 20px;
+    padding: 10px;
+}
+.post-add .input-block > textarea#excerpt {
+    height: 200px;
+}
+.post-add .input-block > #editor {
+    width: 900px;
+    height: 500px;
+    margin-left: 100px;
+}
+.post-add .input-block > .submit {
+    float: left;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    background: #34a853;
+    color: #ffffff;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    text-align: center;
+    margin-left: 100px;
+    margin-top: 130px;
+}
+.post-add .input-block > .goback {
+    float: left;
+    display: block;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    background: #F0AD4E;
+    color: #ffffff;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    margin-left: 20px;
+    text-align: center;
+    margin-top: 130px;
+}
+.post-list > ul > li {
+    margin-bottom: 15px;
+    background: #cccccc;
+    height: 30px;
+    line-height: 30px;
+    min-width: 1000px;
+}
+.post-list > ul > li > a,
+.post-list > ul > li > span {
+    display: block;
+    overflow: hidden;
+    text-align: center;
+    margin-right: 15px;
+}
+.post-list > ul > li > a {
+    background: #34a853;
+    color: #ffffff;
+    -webkit-border-radius: 4px;;
+    -moz-border-radius: 4px;;
+    border-radius: 4px;
+}
+.post-list > ul > li > .post-title {
+    float: left;
+    width: 400px;
+    text-align: left;
+    margin-left: 15px;
+}
+.post-list > ul > li > .post-category {
+    float: right;
+    width: 100px;
+}
+.post-list > ul > li > .post-releaseTime {
+    float: right;
+    width: 160px;
+}
+.post-list > ul > li > .post-status {
+    float: right;
+    width: 40px;
+}
+.post-list > ul > li > .post-edit {
+    float: right;
+    width: 50px;
+}
+.post-list > ul > li > .post-del {
+    float: right;
+    width: 50px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

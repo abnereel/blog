@@ -1,0 +1,12 @@
+<%- include header %>
+
+<div class="post-view">
+    <div class="container clearfix">
+        <h3 class="post-title"><%= post.title %></h3>
+        <time class="post-releaseTime" datetime="<%= post.date %>" pubdate="pubdate"><%= post.date %></time>
+        <div class="post-content"><%- post.content %></div>
+    </div>
+</div>
+
+
+<%- include footer %>

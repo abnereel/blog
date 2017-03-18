@@ -1,0 +1,46 @@
+<%- include ../header %>
+
+    <div class="menu-style">
+        <nav class="inner-nav">
+            <ul class="nav nav-pills">
+                <li role="presentation" class="active"><a href="/admin/menu/behind">所有菜单</a></li>
+                <li role="presentation"><a href="/admin/menu/behind/add">添加菜单</a></li>
+            </ul>
+        </nav>
+
+        <%- include ../components/notification %>
+
+        <div class="menu-list">
+            <ul class="ul-first">
+                <li>
+                    <span class="menu-name">菜单</span>
+                    <span class="menu-del">删除</span>
+                    <span class="menu-edit">编辑</span>
+                    <span class="menu-status">状态</span>
+                    <span class="menu-listOrder">排序</span>
+                </li>
+                <% for (var menu of menuTree) { %>
+                <li>
+                    <div class="menu-icon"><span class="<%= menu.icon %>"></span></div>
+                    <span class="menu-name"><%= menu.name %></span>
+                    <a class="menu-del" href="javascript:void(0);" onclick="confirm(this)" url="/admin/menu/behind/del/<%= menu._id %>">删除</a>
+                    <a class="menu-edit" href="/admin/menu/behind/edit/<%= menu._id %>">编辑</a>
+                    <span class="menu-status"><%= menu.status ? "显示" : "隐藏" %></span>
+                    <span class="menu-listOrder"><%= menu.listOrder %></span>
+                </li>
+                <% for (var item of menu['sub']) { %>
+                <li class="clearfix">
+                    <span class="menu-name li-second">|——<%= item.name %></span>
+                    <a class="menu-del" href="javascript:void(0);" onclick="confirm(this)" url="/admin/menu/behind/del/<%= item._id %>">删除</a>
+                    <a class="menu-edit" href="/admin/menu/behind/edit/<%= item._id %>">编辑</a>
+                    <span class="menu-status"><%= item.status ? "显示" : "隐藏" %></span>
+                    <span class="menu-listOrder"><%= item.listOrder %></span>
+                </li>
+                <% } %>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+<%- include ../components/dialog-confirm %>
+<%- include ../footer %>
+

@@ -1,0 +1,19 @@
+<div class="dialog-confirm" id="dialog-confirm">
+    <div class="message">确定吗？</div>
+    <div class="btnButton clearfix">
+        <input type="hidden" value="" id="confirm-a-href">
+        <button class="sure" id="confirm-sure">确认</button>
+        <button class="cancel" id="confirm-cancel">取消</button>
+    </div>
+</div>
+<script>
+    $(function () {
+        $("#confirm-sure").on("click", function () {
+            window.location.href = $("#confirm-a-href").val();
+        });
+
+        $("#confirm-cancel").on("click", function () {
+            $("#dialog-confirm").slideUp();
+        });
+    });
+</script>

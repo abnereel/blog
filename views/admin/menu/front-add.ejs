@@ -1,0 +1,72 @@
+<%- include ../header %>
+
+    <div class="menu-style">
+        <nav class="inner-nav">
+            <ul class="nav nav-pills">
+                <li role="presentation"><a href="/admin/menu/front">所有菜单</a></li>
+                <li role="presentation" class="active"><a href="/admin/menu/front/add">添加菜单</a></li>
+            </ul>
+        </nav>
+
+        <%- include ../components/notification %>
+
+        <div class="menu-add">
+            <form method="post">
+                <div>
+                    <label>上级菜单</label>
+                    <select name="parentId" id="parentMenu">
+                        <option value="0" deep="1">/</option>
+                        <% for (var item of menuTree) { %>
+
+                            <option value="<%= item._id %>" deep="<%= item.deep %>" ><%= item.name %></option>
+
+                            <% for (var vo of item.sub) { %>
+                                <option value="<%= vo._id %>" deep="<%= vo.deep %>" >&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp|——<%= vo.name %></option>
+                            <% } %>
+
+                        <% } %>
+                    </select>
+                </div>
+                <div style="display: none;">
+                    <input type="hidden" name="deep" value="1" id="deep">
+                </div>
+                <div>
+                    <label>菜单名称</label>
+                    <input type="text" name="name" placeholder="请输入菜单名称">
+                </div>
+                <div>
+                    <label>菜单地址</label>
+                    <input type="text" name="url" placeholder="请输入菜单地址">
+                </div>
+                <div>
+                    <label>菜单图标</label>
+                    <input type="text" name="icon" placeholder="请输入bootstrap字体图标样式类">
+                </div>
+                <div>
+                    <label>菜单排序</label>
+                    <input type="text" name="listOrder" placeholder="请输入一个有效的整数">
+                </div>
+                <div>
+                    <label>是否显示</label>
+                    <select name="status">
+                        <option value="1">显示</option>
+                        <option value="0">隐藏</option>
+                    </select>
+                </div>
+                <div>
+                    <input class="submit" type="submit" value="添加">
+                    <a class="goback" href="/admin/menu/front">返回</a>
+                </div>
+            </form>
+            <script>
+                $(function () {
+                    $("#parentMenu").on("change", function () {
+                        $("#deep").val(parseInt($("#parentMenu option:selected").attr("deep")) + 1);
+                    });
+                });
+            </script>
+        </div>
+    </div>
+
+<%- include ../footer %>
+

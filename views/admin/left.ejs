@@ -1,0 +1,61 @@
+<aside class="page-left">
+    <div id="sidebar" class="nav-collapse">
+        <ul class="ul-first">
+            <li class="<%= curUrl == '/admin' ? "curr" : "" %>">
+                <a href="/admin" class="clearfix">
+                    <span class="glyphicon glyphicon-home"></span>
+                    <span class="menu-text">Dashboard</span>
+                    <span class="glyphicon glyphicon-plus"></span>
+                </a>
+            </li>
+            <% for (var menu of leftTree) { %>
+            <% var curr = RegExp(menu.url).test(curUrl) ? "curr" : "" %>
+                <li class="<%= curr %>">
+                    <a href="javascript:void(0)" class="clearfix">
+                        <span class="<%= menu.icon %>"></span>
+                        <span class="menu-text"><%= menu.name %></span>
+                        <span class="glyphicon glyphicon-plus"></span>
+                    </a>
+                    <ul class="ul-second">
+                        <% for (var item of menu.sub) { %>
+                            <% var curr = RegExp(item.url).test(curUrl) ? "curr" : "" %>
+                            <li class="<%= curr %>"><a href="<%= item.url %>"><%= item.name %></a></li>
+                        <% } %>
+                    </ul>
+                </li>
+            <% } %>
+        </ul>
+    </div>
+</aside>
+<script>
+    $(function () {
+        //菜单点击效果
+        $("#sidebar > ul > li > a").on("click", function () {
+
+            var obj = $("#sidebar > ul > li");
+            var currObj = $(this).parent();
+
+            obj.find(".ul-second").slideUp();
+            obj.removeClass("curr");
+            currObj.addClass("curr");
+            obj.find("a > span:last-child").removeClass("glyphicon-minus");
+            obj.find("a > span:last-child").addClass("glyphicon-plus");
+
+            if (currObj.find(".ul-second").css("display") == "none") {
+                currObj.find(".ul-second").slideDown();
+                currObj.find("a > span:last-child").removeClass("glyphicon-plus");
+                currObj.find("a > span:last-child").addClass("glyphicon-minus");
+            } else {
+                currObj.find(".ul-second").slideUp();
+                currObj.find("a > span:last-child").removeClass("glyphicon-minus");
+                currObj.find("a > span:last-child").addClass("glyphicon-plus");
+            }
+        });
+
+        //菜单展开
+        $(".ul-second").find("li.curr").parent().addClass("curr");
+        $(".ul-second").find("li.curr").parent().parent().find("a > span:last-child").removeClass("glyphicon-plus");
+        $(".ul-second").find("li.curr").parent().parent().find("a > span:last-child").addClass("glyphicon-minus");
+
+    });
+</script>
