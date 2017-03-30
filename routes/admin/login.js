@@ -59,6 +59,7 @@ router.post('/', function (req, res, next) {
 });
 
 router.get('/add', function (req, res, next) {
+    //测试账号
     var user = {
         name: 'abner',
         password: md5('11111111')
