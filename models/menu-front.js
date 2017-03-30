@@ -20,6 +20,12 @@ module.exports = {
             .sort({ deep: 1, listOrder: 1 });
     },
 
+    //根据Url查找菜单
+    getMenuByUrl: function (url) {
+        return FrontMenu
+            .findOne({ url: url });
+    },
+
     //根据_id查找指定菜单内容
     getMenuById: function(_id) {
         return FrontMenu

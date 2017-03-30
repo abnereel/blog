@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title><%= blog.title %></title>
+    <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+    <link rel="stylesheet" href="/stylesheets/admin.css">
+    <script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/javascripts/bootstrap.min.js"></script>
+</head>
+    <body style="overflow: hidden;">
+    <div class="full-bg">
+        <div class="slide-bg" id="slide-bg">
+            <img src="/images/bg-01.jpg" />
+            <img src="/images/bg-05.jpg" />
+        </div>
+
+        <div class="login">
+            <form method="post">
+                <div class="message">
+                    <% if(error) { %>
+                        <span><%= error %></span>
+                    <% } else { %>
+                        <span>请登录账户</span>
+                    <% } %>
+                </div>
+                <div class="middle" id="login-middle">
+                    <div class="avatar"><img src="/images/avatar.png" /></div>
+                    <div class="name">
+                        <span class="glyphicon glyphicon-user"></span>
+                        <input id="name" type="text" name="name" placeholder="请输入用户名" autocomplete="off">
+                    </div>
+                    <div class="password">
+                        <span class="glyphicon glyphicon-lock"></span>
+                        <input id="user" type="password" name="password" placeholder="请输入密码" autocomplete="off">
+                    </div>
+                </div>
+                <div class="submit"><input type="submit" value="登录"></div>
+            </form>
+        </div>
+    </div>
+    </body>
+</html>
+<script>
+    $(function () {
+        setTimeout(function () {
+            $("#login-middle").slideDown(1000);
+        }, 200);
+
+        /*幻灯片轮播*/
+        var timer = setInterval(changeSlide, 5000);
+        $("#slide-bg > img").eq(0).addClass("curr");
+    });
+
+    /**
+     * 全屏背景幻灯片
+     */
+    function changeSlide(action){
+        curIndex = $("#slide-bg").find("img.curr").index();
+        var length = $("#slide-bg > img").length;
+
+        var nextIndex = 0;
+        if (curIndex >= length-1){
+            nextIndex = 0;
+        }else {
+            nextIndex = curIndex + 1;
+        }
+
+        $("#slide-bg > img").removeClass("curr");
+        $("#slide-bg > img").eq(nextIndex).addClass("curr");
+    }
+</script>

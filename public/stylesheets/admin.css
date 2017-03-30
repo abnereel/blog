@@ -64,24 +64,30 @@ ul {
     float: right;
     height: 44px;
     line-height: 44px;
-    padding: 6px;
-    border: 1px solid #f0f0f8;
     margin: 8px 0;
     cursor: pointer;
 }
-.page-top > .top-right > .userinfo > .pic {
+.page-top > .top-right > .userinfo .pic {
     float: left;
     width: 30px;
     height: 30px;
 }
-.page-top > .top-right > .userinfo > .name {
+.page-top > .top-right > .userinfo .name {
     float: left;
     display: block;
     height: 30px;
     line-height: 30px;
     margin-left: 5px;
 }
-.page-top > .top-right > .userinfo > .glyphicon-triangle-bottom {
+.page-top > .top-right > .userinfo .caret {
+    margin: 10px 0 0 5px;
+}
+.page-top > .top-right > .userinfo > ul.dropdown-menu {
+    position: absolute;
+    right: 15px;
+    left: auto;
+}
+.page-top > .top-right > .userinfo .glyphicon-triangle-bottom {
     float: left;
     display: block;
     font-size: 12px;
@@ -178,21 +184,44 @@ ul {
 .nav-pills > li.active > a:hover {
     background: #34a853;
 }
-
 .nav-pills > li > a,
 .nav-pills > li > a:focus,
 .nav-pills > li > a:hover {
     background: #33404F;
     color: #aeb2b7;
 }
-
-
-
+.nav-pills > li > select {
+    height: 40px;
+    border-radius: 0;
+}
 .inner-nav {
     height: 60px;
     border-bottom: 1px solid #aeb2b7;
 }
 /*------------ components ------------*/
+.paging {
+    position: absolute;
+    bottom: 20px;
+}
+.paging > span {
+    border: 1px solid #CCCCCC;
+    padding: 5px 10px;
+    color: #aeb2b7;
+    margin: 0 5px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.paging > a {
+    border: 1px solid #34a853;
+    padding: 5px 10px;
+    margin: 0 5px;
+    color: #ffffff;
+    background: #34a853;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
 .success {
     margin: 20px 0;
     color: #34a853;
@@ -444,10 +473,10 @@ ul {
 }
 .post-add .input-block > textarea#excerpt {
     height: 200px;
+    text-align: justify;
 }
 .post-add .input-block > #editor {
     width: 900px;
-    height: 500px;
     margin-left: 100px;
 }
 .post-add .input-block > .submit {
@@ -462,7 +491,7 @@ ul {
     border-radius: 4px;
     text-align: center;
     margin-left: 100px;
-    margin-top: 130px;
+    margin-top: 30px;
 }
 .post-add .input-block > .goback {
     float: left;
@@ -477,7 +506,7 @@ ul {
     border-radius: 4px;
     margin-left: 20px;
     text-align: center;
-    margin-top: 130px;
+    margin-top: 30px;
 }
 .post-list > ul > li {
     margin-bottom: 15px;
@@ -526,7 +555,136 @@ ul {
     float: right;
     width: 50px;
 }
-
+/*------------ login ------------*/
+.full-bg .slide-bg > img {
+    display: none;
+    width: 100%;
+    height: 100%;
+}
+.full-bg .slide-bg > img.curr {
+    display: block;
+}
+.login {
+    position: absolute;
+    z-index: 999;
+    top: 45%;
+    left: 50%;
+    margin: -200px 0 0 -200px;
+    width: 400px;
+    height: 400px;
+    color: #ffffff;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+}
+.login .message {
+    position: relative;
+    top: 0;
+    left: 0;
+    width: inherit;
+    height: 50px;
+    line-height: 50px;
+    padding: 0 20px;
+    /*background: url('../images/up.png');*/
+    background: #202020;
+    text-align: center;
+    overflow: hidden;
+    border-top-left-radius: 15px;
+    border-top-right-radius: 15px;
+    color: #ffffff;
+}
+.login .middle {
+    display: none;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: inherit;
+    height: 300px;
+    background: url('../images/middle.png');
+}
+.login .middle .avatar {
+    height: 110px;
+    padding: 30px 0;
+}
+.login .middle .avatar img {
+    display: block;
+    width: 50px;
+    height: 50px;
+    margin: 0 auto;
+}
+.login .middle .name {
+    position: relative;
+    z-index: 100;
+    top: 0;
+    left: 25px;
+    width: 350px;
+    height: 30px;
+}
+.login .middle .name > span {
+    position: absolute;
+    top: 7px;
+    left: 5px;
+    z-index: 101;
+    font-size: 16px;
+    color: #999999;
+}
+.login .middle .name > input {
+    position: absolute;
+    width: inherit;
+    height: inherit;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #999999;
+    text-indent: 40px;
+    outline: none;
+}
+.login .middle .password {
+    position: relative;
+    z-index: 100;
+    top: 30px;
+    left: 25px;
+    width: 350px;
+    height: 30px;
+}
+.login .middle .password > span {
+    position: absolute;
+    top: 7px;
+    left: 5px;
+    z-index: 101;
+    font-size: 16px;
+    color: #999999;
+}
+.login .middle .password > input {
+    position: absolute;
+    width: inherit;
+    height: inherit;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #999999;
+    text-indent: 40px;
+    outline: none;
+}
+.login .submit {
+    position: relative;
+    z-index: 101;
+    top: 0;
+    left: 0;
+    width: 400px;
+    height: 50px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+.login .submit > input {
+    width: inherit;
+    height: inherit;
+    /*background: url('../images/down.png');*/
+    background: #34a853;
+    border: none;
+    font-size: 20px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    outline: none;
+}
 
 
 

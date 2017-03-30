@@ -1,14 +1,16 @@
 <div class="nav">
-    <div class="container clearfix">
-        <ul>
-            <% for (var item of nav) { %>
-                <li><a class="<%= (curUrl == item.url) ? "curr" : "" %>" href="<%= item.url %>"><%= item.name %></a></li>
-            <% } %>
-        </ul>
-        <div class="search">
-            <form action="" method="post">
-                <input type="text" name="keyword" placeholder="输入关键字按回车进行搜索" />
-            </form>
-        </div>
-    </div>
+    <ul>
+        <% for (var item of nav) { %>
+            <li>
+                <a class="<%= RegExp(item.url).test(curUrl) ? "curr" : "" %>" href="<%= item.url %>">
+                    <%= item.name %>
+                </a>
+            </li>
+        <% } %>
+    </ul>
 </div>
+<script>
+    if (!$(".nav li").find("a.curr")) {
+        $(".nav li").eq(0).find("a").addClass("curr");
+    }
+</script>

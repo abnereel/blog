@@ -3,8 +3,16 @@
 <div class="menu-style">
     <nav class="inner-nav">
         <ul class="nav nav-pills">
-            <li role="presentation" class="active"><a href="/admin/post">所有文章</a></li>
-            <li role="presentation"><a href="/admin/post/add">添加文章</a></li>
+            <li role="presentation" class="active"><a href="/admin/content/post">所有文章</a></li>
+            <li role="presentation"><a href="/admin/content/post/add">添加文章</a></li>
+            <li role="presentation">
+                <select id="category">
+                    <option value="0" url="/admin/content/post" selected="selected">所有</option>
+                    <% for (var item of nav) { %>
+                        <option value="<%= item._id %>" url="/admin/content/post/category/<%= item._id %>"><%= item.name %></option>
+                    <% } %>
+                </select>
+            </li>
         </ul>
     </nav>
 
@@ -23,16 +31,27 @@
             <% for (var post of posts) { %>
             <li class="clearfix">
                 <span class="post-title"><%= post.title %></span>
-                <a class="post-del" href="javascript:void(0);" onclick="confirm(this)" url="/admin/post/del/<%= post._id %>">删除</a>
-                <a class="post-edit" href="/admin/post/edit/<%= post._id %>">编辑</a>
+                <a class="post-del" href="javascript:void(0);" onclick="confirm(this)" url="/admin/content/post/del/<%= post._id %>">删除</a>
+                <a class="post-edit" href="/admin/content/post/edit/<%= post._id %>">编辑</a>
                 <span class="post-status"><%= post.status ? '显示' : '隐藏' %></span>
                 <span class="post-releaseTime"><%= post.date %></span>
                 <span class="post-category"><%= post.category.name %></span>
             </li>
             <% } %>
         </ul>
+        <%- paging %>
     </div>
 </div>
 <%- include ../components/dialog-confirm %>
 <%- include ../footer %>
+<script>
+    $(function () {
+        //由于safari的selected失效，为了兼容safari特意给option[value=0]默认添加selected属性
+        $("#category option").removeAttr("selected");
+        $("#category option[value=<%= category %>]").attr("selected", "selected");
+        $("#category").on("change", function () {
+            window.location.href = $("#category option:selected").attr("url");
+        });
+    });
+</script>
 

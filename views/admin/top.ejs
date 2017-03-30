@@ -5,9 +5,14 @@
     </div>
     <div class="top-right">
         <div class="userinfo">
-            <img class="pic" src="/images/introduce.jpg" />
-            <span class="name">Abner</span>
-            <span class="glyphicon glyphicon-triangle-bottom"></span>
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <img class="pic" src="/images/avatar.png" />
+                <span class="name"><%= user.name %></span>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu">
+                <li><a href="/admin/logout">注销</a></li>
+            </ul>
         </div>
     </div>
 </header>

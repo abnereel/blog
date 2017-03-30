@@ -5,20 +5,76 @@ var path = require('path');
 var express = require('express');
 var router = express.Router();
 var ueditor = require('ueditor');
-var PostModule = require('../../models/post');
+var PostModel = require('../../models/post');
 var dateformat = require('dateformat');
+var config = require('config-lite');
+var Common = require('../../lib/Common');
 
 //文章列表页
 router.get('/', function (req, res, next) {
 
-    PostModule
-        .getPostsList()
-        .then(function (result) {
+    var page = req.query.page ? (Math.abs(parseInt(req.query.page)) > 0 ? Math.abs(parseInt(req.query.page)) : 1) : 1;
+    if (isNaN(page)) {
+        return next(new Error('类型错误'));
+    }
+    var limit = config.page.behindLimit;
+    var skip = page ? (page-1)*limit : 0;
+
+    var list = [
+        PostModel.getPostsCounts(),
+        PostModel.getPostsList(limit, skip)
+    ];
+
+    Promise
+        .all(list)
+        .then(function (data) {
+            var counts = data[0];
+            var result = data[1];
+            var paging = Common.paging(page, counts, limit, '/admin/content/post', '?page', 5);
             result.forEach(function (item) {
                 item.date = dateformat(new Date(item.releaseTime).getTime(), 'yyyy-mm-dd HH:MM:ss');
             });
+
             res.render('admin/post/list', {
-                posts: result
+                posts: result,
+                paging: paging,
+                category: 0
+            });
+        })
+        .catch(next);
+});
+
+//根据类型获取文章列表
+router.get('/category/:category', function (req, res, next) {
+    console.log('/category');
+
+    var page = req.query.page ? (Math.abs(parseInt(req.query.page)) > 0 ? Math.abs(parseInt(req.query.page)) : 1) : 1;
+    if (isNaN(page)) {
+        return next(new Error('类型错误'));
+    }
+    var limit = config.page.behindLimit;
+    var skip = page ? (page-1)*limit : 0;
+    var category = req.params.category;
+
+    var list = [
+        PostModel.getPostsCountsByCategory(category),
+        PostModel.getPostsByCategory(category, limit, skip)
+    ];
+
+    Promise
+        .all(list)
+        .then(function (data) {
+            var counts = data[0];
+            var result = data[1];
+            var paging = Common.paging(page, counts, limit, '/admin/content/post/category/'+category, '?page', 5);
+            result.forEach(function (item) {
+                item.date = dateformat(new Date(item.releaseTime).getTime(), 'yyyy-mm-dd HH:MM:ss');
+            });
+
+            res.render('admin/post/list', {
+                posts: result,
+                paging: paging,
+                category: category
             });
         })
         .catch(next);
@@ -42,15 +98,15 @@ router.post('/add', function (req, res, next) {
         content: req.body.content,
         author: 'Abner',
     };
-    PostModule
+    PostModel
         .create(post)
         .then(function () {
             req.flash('success', '发布成功');
-            res.redirect('/admin/post/add');
+            res.redirect('/admin/content/post/add');
         })
         .catch(function (e) {
             req.flash('error', '发布失败');
-            res.redirect('/admin/post/add');
+            res.redirect('/admin/content/post/add');
             next(e);
         });
 });
@@ -59,10 +115,11 @@ router.post('/add', function (req, res, next) {
 router.get('/edit/:_id', function (req, res, next) {
 
     var _id = req.params._id;
-    PostModule
+    PostModel
         .getPostById(_id)
         .then(function (result) {
             result.date = dateformat(new Date(result.releaseTime).getTime(), 'yyyy-mm-dd HH:MM:ss');
+            //result.content = Common.html_decode(result.content);
             res.render('admin/post/edit',{
                 post: result
             });
@@ -86,15 +143,15 @@ router.post('/edit/:_id', function (req, res, next) {
         author: 'Abner丶Lee',
     };
 
-    PostModule
+    PostModel
         .updatePostById(post)
         .then(function () {
             req.flash('success', '更新成功');
-            res.redirect('/admin/post/edit/'+req.body._id);
+            res.redirect('/admin/content/post/edit/'+req.body._id);
         })
         .catch(function (e) {
             req.flash('error', '更新失败');
-            res.redirect('/admin/post');
+            res.redirect('/admin/content/post');
             next(e);
         });
 });
@@ -103,15 +160,15 @@ router.post('/edit/:_id', function (req, res, next) {
 router.get('/del/:_id', function (req, res, next) {
 
     var _id = req.params._id;
-    PostModule
+    PostModel
         .deletePostById(_id)
         .then(function () {
             req.flash('success', '删除成功');
-            res.redirect('/admin/post');
+            res.redirect('/admin/content/post');
         })
         .catch(function (e) {
             req.flash('error', '删除失败');
-            res.redirect('/admin/post');
+            res.redirect('/admin/content/post');
             next(e);
         });
 })

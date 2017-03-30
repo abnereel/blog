@@ -1,15 +1,18 @@
 <%- include header %>
 
-<div class="home">
-    <div class="container clearfix">
-        <div class="home-left">
-            <% for (var post of posts) { %>
-                <%- include ./components/post-content %>
-            <% } %>
+<div class="main">
+    <div class="post-area">
+        <div class="search">
+            <form method="post">
+                <input type="text" name="keyword" placeholder="输入关键词进行搜索" />
+            </form>
         </div>
-        <div class="home-right">
-            <%- include ./components/introduce %>
-        </div>
+        <% for (var post of posts) { %>
+            <%- include ./components/post-block %>
+        <% } %>
+    </div>
+    <div class="module-area">
+        <%- include ./components/introduce %>
     </div>
 </div>
 

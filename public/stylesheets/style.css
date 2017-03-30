@@ -6,6 +6,9 @@ body {
     margin: 0;
     padding: 0;
 }
+body,html {
+    height: 100%;
+}
 a,a:hover,a:link,a:active,a:visited {
     color: #333333;
     text-decoration: none;
@@ -26,7 +29,7 @@ ul {
     overflow: hidden;
 }
 /*------------ nav ------------*/
-.nav {
+/*.nav {
     width: 100%;
     height: 50px;
     line-height: 50px;
@@ -69,96 +72,182 @@ ul {
     border: none;
     outline: none;
     background-color: #efefef;
+}*/
+.error-404 {
+    height: 100%;
+    background: #ffffff;
+    margin: 0 20px;
 }
-/*------------ home ------------*/
-.home {
-    margin-top: 50px;
+.error-500 > span,
+.error-404 > span {
+    position: relative;
+    display: block;
+    font-size: 100px;
+    text-align: center;
+    top: 35%;
 }
-.home .home-left {
-    float: left;
+/*------------ nav ------------*/
+.nav {
+    position: fixed;
+    z-index: 100;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 100%;
+    background: #202020;
+    overflow: hidden;
 }
-.home .home-left .post-content {
-    padding: 50px 0;
-    width: 650px;
-    border-bottom: 1px solid #5d5c5d;
+.nav > ul {
+    margin-top: 150px;
 }
-.home .home-left .post-content .title {
-    display: inline-block;
-    font-size: 18px;
-    height: 18px;
-    line-height: 18px;
-    -webkit-transition: color linear .2s;
-    -moz-transition: color linear .2s;
-    -ms-transition: color linear .2s;
-    -o-transition: color linear .2s;
-    transition: color linear .2s;
-    font-weight: bold;
+.nav > ul > li {
+    margin-bottom: 20px;
 }
-.home .home-left .post-content .title:hover {
+.nav > ul > li > a {
+    display: block;
+    color: #cfcfcf;
+    text-align: center;
+
+}
+.nav > ul > li > a.curr {
     color: #34a853;
 }
-.home .home-left .post-content .description {
-    margin: 15px 0;
+.nav > ul > li > a:hover {
+    color: #34a853;
+}
+.main {
+    height: 100%;
+    padding-left: 100px;
+}
+.main > .post-area {
+    float: left;
+    width: 60%;
+    height: 100%;
+}
+.main > .post-area > .search {
+    margin: 30px 20px;
+}
+.main > .post-area > .search input {
+    display: block;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    border: 3px solid #ffffff;
+    outline: none;
+    -webkit-border-radius: 40px;
+    -moz-border-radius: 40px;
+    border-radius: 40px;
+    text-indent: 20px;
+    font-size: 14px;
+}
+.main > .post-area > .search input:hover {
+    border: 3px solid #34a853;
+}
+.main > .post-area > .post-content {
+    padding: 0 20px;
+    margin: 0 20px 0px 20px;
+    height: 100%;
+    background: #ffffff;
+}
+.main > .post-area > .post-content > h3 {
+    text-align: center;
+    font-size: 20px;
+    line-height: 20px;
+    padding-top: 50px;
+}
+.main > .post-area > .post-content > time {
+    display: block;
+    text-align: center;
+    margin: 15px 0 30px 0;
+}
+.main > .post-area > .post-content > div {
+    text-align: justify;
+    line-height: 24px;
+    margin-bottom: 50px;
+}
+.main > .post-area > .post-block {
+    padding: 20px;
+    background: #ffffff;
+    margin: 0 20px 30px 20px;
+}
+.main > .post-area > .post-block > .title {
+    width: inherit;
+    height: 22px;
+    overflow: hidden;
+}
+.main > .post-area > .post-block > .title > a {
+    font-size: 22px;
+    height: inherit;
+    line-height: 22px;
+}
+.main > .post-area > .post-block > .title > a:hover {
+    color: #34a853;
+}
+.main > .post-area > .post-block > .description {
+    font-size: 14px;
+    line-height: 24px;
+    margin-top: 15px;
     text-indent: 30px;
     text-align: justify;
+    color: #666666;
 }
-.home .home-left .post-content .addition {
-    color: #86888a;
+.main > .post-area > .post-block > .addition {
+    margin-top: 30px;
+    height: 16px;
+    line-height: 16px;
+    color: #8a8a8a;
 }
-.home .home-left .post-content .addition span {
-    display: inline-block;
-    font-size: 12px;
-}
-.home .home-right {
-    float: right;
-    width: 330px;
-    margin-top: 50px;
-}
-.home .home-right .introduct {
-    width: 310px;
-    padding: 10px;
-    background: #e4e4e4;
-}
-.home .home-right .introduct > div {
+.main > .post-area > .post-block > .addition > .date {
     float: left;
 }
-.home .home-right .introduct > div:first-child {
-    width: 50px;
-    height: 50px;
+.main > .post-area > .post-block > .addition > .comment {
+    float: right;
 }
-.home .home-right .introduct > div:first-child img {
-    width: inherit;
-    height: inherit;
+.main > .post-area > .post-block > .addition > .view {
+    float: right;
+    margin-left: 10px;
 }
-.home .home-right .introduct > div:last-child {
-    width:255px;
-    margin-left: 5px;
+.main > .post-area > .post-block > .addition > div {
+    cursor: pointer;
+}
+.main > .post-area > .post-block > .addition > div > img {
+    float: left;
+    width: 16px;
+    height: 16px;
+    margin-right: 2px;
+}
+.main > .post-area > .post-block > .addition > div > span,
+.main > .post-area > .post-block > .addition > div > a {
+    float: left;
+    color: #a8a8a8;
     font-size: 12px;
 }
-.post-view {
-    padding-top: 100px;
+.main > .module-area {
+    float: right;
+    width: 40%;
 }
-.post-view > .container > .post-title {
-    font-size: 24px;
-    text-align: center;
+.main > .module-area > .introduct {
+    margin: 30px 20px 30px 0px;
+    background: #e9e8dd;
+    padding: 20px;
 }
-.post-view > .container > .post-releaseTime {
-    display: block;
-    margin-top: 10px;
-    text-align: center;
-    font-size: 12px;
+.main > .module-area > .introduct > .img {
+    float: left;
 }
-.post-view > .container > .post-content {
-    margin-top: 50px;
+.main > .module-area > .introduct > .img > img {
+    width: 100px;
+    height: 100px;
+}
+.main > .module-area > .introduct > .text {
+    margin-left: 120px;
     text-align: justify;
 }
-.error-500,
-.error-404 {
-    font-size: 100px;
-    margin-top: 150px;
-    text-align: center;
+.main > .module-area > .introduct > .text > h3 {
+    font-size: 20px;
 }
-
+.main > .module-area > .introduct > .text > p {
+    margin-top: 5px;
+}
 
 
 

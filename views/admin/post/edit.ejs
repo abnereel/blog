@@ -3,9 +3,9 @@
 <div class="menu-style">
     <nav class="inner-nav">
         <ul class="nav nav-pills">
-            <li role="presentation"><a href="/admin/post">所有文章</a></li>
-            <li role="presentation"><a href="/admin/post/add">添加文章</a></li>
-            <li role="presentation" class="active"><a href="/admin/post/edit/<%= post._id %>">编辑文章</a></li>
+            <li role="presentation"><a href="/admin/content/post">所有文章</a></li>
+            <li role="presentation"><a href="/admin/content/post/add">添加文章</a></li>
+            <li role="presentation" class="active"><a href="/admin/content/post/edit/<%= post._id %>">编辑文章</a></li>
         </ul>
     </nav>
 
@@ -73,12 +73,12 @@
 
             <div class="input-block clearfix">
                 <label for="content">文章内容</label>
-                <script id="editor" name="content"><%- post.content %></script>
+                <script id="editor" name="content" style="height:500px;"><%- post.content %></script>
             </div>
 
             <div class="input-block clearfix">
                 <input class="submit" type="submit" value="更新">
-                <a class="goback" href="/admin/post">返回</a>
+                <a class="goback" href="/admin/content/post">返回</a>
             </div>
         </form>
     </div>

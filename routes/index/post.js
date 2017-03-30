@@ -3,18 +3,27 @@
  */
 var express = require('express');
 var router = express.Router();
-var PostModule = require('../../models/post');
+var PostModel = require('../../models/post');
+var FrontMenuModel = require('../../models/menu-front');
 var dateformat = require('dateformat');
+var async = require('async');
+var Common = require('../../lib/Common');
 
 //首页
-router.get('/', function (req, res, next) {
+router.get('/home', function (req, res, next) {
 
-    PostModule
+    PostModel
         .getPostsList()
         .then(function (result) {
             result.forEach(function (item) {
                 item.date = dateformat(new Date(item.releaseTime).getTime(), 'yyyy-mm-dd');
             });
+            //过滤博客声明
+            for (var i=0; i<result.length; i++) {
+                if (result[i].category.url == '/licence') {
+                    result.splice(i, 1);
+                }
+            }
             res.render('index/post', {
                 posts: result
             });
@@ -22,26 +31,98 @@ router.get('/', function (req, res, next) {
         .catch(next);
 });
 
-//文章详情页
-router.get('/view/:_id', function (req, res, next) {
+
+//显示文章列表
+router.get('/:category', function (req, res, next) {
+
+    var url = req.originalUrl
+    async.waterfall([
+        function (cb) {
+            FrontMenuModel
+                .getMenuByUrl(url)
+                .then(function (result) {
+                    cb(null, result._id);
+                })
+                .catch(function (e) {
+                    cb(e, null);
+                });
+        },
+        function (category, cb) {
+            PostModel
+                .getPostsByCategory(category)
+                .then(function (result) {
+                    cb(null, result, category);
+                })
+                .catch(function (e) {
+                    cb(e, null);
+                });
+        }
+    ], function (err, result, category) {
+        if (err) {
+            //参数错误
+            if (err.name.toString() == 'TypeError' || err.name.toString() == 'CastError') {
+                return res.redirect('/index/404');
+            }
+            next(err);
+        }
+        result.forEach(function (item) {
+            item.date = dateformat(new Date(item.releaseTime).getTime(), 'yyyy-mm-dd');
+        });
+        res.render('index/post', {
+            posts: result
+        });
+    });
+});
+
+
+//查看文章
+router.get('/:category/:_id', function (req, res, next) {
 
     var _id = req.params._id;
-    PostModule
-        .getPostById(_id)
-        .then(function (result) {
-            console.log(result);
-            if (result === null) {
-                res.render('index/404');
+    //检查参数长度是否正确（ObjectId的长度固定为24位）
+    if (_id.length != 24) {
+        return res.redirect('/index/404');
+    }
+
+    async.parallel([
+        function (cb) {
+            PostModel
+                .getPostById(_id)
+                .then(function (result) {
+                    cb(null, result);
+                })
+                .catch(function (e) {
+                    cb(e, null);
+                });
+        },
+        function (cb) {
+            PostModel
+                .addPostViewCount(_id)
+                .then(function (result) {
+                    cb(null, result);
+                })
+                .catch(function (e) {
+                    cb(e, null);
+                });
+        }
+    ], function (err, results) {
+        if (err) {
+            //参数错误
+            if (err.name.toString() == 'TypeError' || err.name.toString() == 'CastError') {
+                return res.redirect('/index/404');
             }
-            result.date = dateformat(new Date(result.releaseTime).getTime(), 'yyyy-mm-dd HH:MM:ss');
-            res.render('index/post-view', {
-                post: result
-            });
-        })
-        .catch(function (e) {
-            res.render('index/404');
-            next(e);
+            next(err);
+        }
+        var result = results[0];
+        if (result === null) {
+            return res.redirect('/index/404');
+        }
+        result.date = dateformat(new Date(result.releaseTime).getTime(), 'yyyy-mm-dd HH:MM:ss');
+        //result.content = Common.html_decode(result.content);
+        res.render('index/post-view', {
+            post: result
         });
+    });
 });
 
 module.exports = router;

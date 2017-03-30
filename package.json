@@ -7,6 +7,7 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "async": "^2.1.5",
     "bluebird": "^3.5.0",
     "body-parser": "~1.16.0",
     "config-lite": "^1.5.0",
@@ -19,41 +20,12 @@
     "express": "~4.14.1",
     "express-session": "^1.15.1",
     "formidable": "^1.1.1",
+    "md5": "^2.2.1",
     "mongoose": "^4.8.6",
     "morgan": "~1.7.0",
     "multiparty": "^4.1.3",
     "serve-favicon": "~2.3.2",
-    "ueditor": "^1.2.1"
+    "ueditor": "^1.2.1",
+    "xss": "^0.3.3"
   }
 }
-
------BEGIN RSA PRIVATE KEY-----
-Proc-Type: 4,ENCRYPTED
-DEK-Info: AES-128-CBC,C9506AD336EA692C29D8B6657C4C57B6
-
-RhVC5Ut8gsSYIDk7NNawhHKX8JQpdoNyZbYqXkON74j6NSZYDMBTg8wtSoqLEFcl
-dKe4TNCaaoauiNoEiWFaHNcor9LQRxMLLs+bD4VFpjYn0jZiNt0J/D/yzEktWKOO
-SrBZoRmS6us4/JWQ3iYzQ/R5Ku24OsiG30nNVvojz/UGq5BtFKGoXP+cf3XZJ5Ha
-vrDeYg/fwuTwcgQ0u+vgvfBcJi9gk6/P6pzvEroZXrT00P3XuzFdioucfu5xlXA
-ldJzGncSUBv9o+nF3HHyuG5P1S09z/1KoDkr6cDceRIRWs99v36D9uHzDTuSDDCh
-yOwc/h6c7/DSyhSjO81GzAt+lbhKWSuRkYU80QKEp792zeDzIbqRH1L6H1V6gFAE
-vwovV6/6caQI4ml7/EqEfix6pfQtJu8jQZ4fhrlEjpC4ow6e8P8JImW5QUt3EJd
-bcCSXvUb7TIlmyxRRq5EmUnyaftvtKBvyT/ax3a1CUD0Vu64zfpCwcbtFY16NNS0
-7+niH3nrGOEL26yVHWU6Q4XVB0uwmxPevC+5YkGAguMjGMA7W7HoUl9TD1KJIi4P
-kbfQneftf83yvYj/YtM0LTvEGm6LaplC9oFBzvzHK0+S4+s+0Xg4Rt/fhA4wouMo
-oIcLlUoXIwlYg5hEmx5YFg69cTX2hA4USKTOX66AKijREqA9ee0PoZgXBJlk6Wm2
-Vdbv6IM9uRG01433ReRiP3eYpy8fXp+D/d+e2JRKd4JjNkExy12XsXzkSDX04cwt
-49gCpn60xbjZR+d6P3bx4qnV8dk+mgXyGl5bO5VgkUzhgXIGabi8932sJFco2VND
-DFMfA2gTbZ8RpstoExggGVBnfwhrs/BLJ1Hbm1dIaGVAXCbkwTTSGJI+Lm1uiG3o
-2OytMtm1FhS4cvq1xkQ4XPFvZx4D8F1cs10a8Fjt3uQ3SfKqkBCePwINNyfDuy+s
-WJ33ZjLHzO7rMdAkHPhsIGhcXthZkSX3K4sMPwv4cYEajaAp3LI3L/CqqKp7B2kF
-TTUooH9ygUmw9GE5Q0ZibIkHrQu4zhRfrunjTISe+8u6Cf9x/ZxIgw4nfhqQ/ril
-veU/TWkWQT1ZT3zOyXMCCsrfC2wAMjRKPxjda4rQaWSsyQ3KwgvZFesfChFTXclv
-f6RzfBXo0G5TndDisFPQmnPqa9+fN7WK4cKamDtn3dikQOJp6qtWnHBTWirFW9h5
-AB5KqM/NDxKjWGPCDe2Ovu+5DA/XWY+5P/Ghpx8Z74EgmwmVexee5f/sy6nmaO3m
-KRJtPRTimJc6ADx1YFP19xWQwyGiWLjEVZAlxRsPqHIJaP6z4sfqdlweG1zETJZj
-ph1oii902NakhBDKuq3F+2XLmzvnVijUj2Oc9W+JzYVm8Us6D4che9N78PDTcoRk
-Eu+PSb5XEaMz2hfbRq7XNTRXgi6BJbsgZ5SrluJzhciTfm33nTAX8Eo+gNucv0+v
-7zJ+iJUMeeEMVnM083Q+Sg5F82aF0IDd+uDHRhIkTNNmqAujarqV1HNCIfCSHw1e
-+5f9WmNmoiewjZ1TQYx+jbGFOutzorwA5Ty4tk6Z5wiBG09279pZOOnyxf8s5425
------END RSA PRIVATE KEY-----
