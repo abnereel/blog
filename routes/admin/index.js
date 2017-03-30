@@ -34,11 +34,12 @@ router.use(function (req, res, next) {
 router.use(require('../../middlewares/leftTree'));//后台左侧导航菜单
 router.get('/', check.checkLogin, function (req, res, next) {res.render('admin/index');});//Dashboard
 router.use('/login', check.checkNotLogin, require('./login'));//登录页
+router.use('/logout', check.checkLogin, require('./logout'));//登出页
 router.use('/menu/behind', check.checkLogin, require('./menu-behind'));//后台菜单页
 router.use('/menu/front', check.checkLogin, require('./menu-front'));//前台菜单页
 router.use('/content/post', check.checkLogin, require('./post'));//文章管理页
 router.use(function (req, res) {
-    res.redirect('/admin/login');
+    res.redirect('/admin');
 });
 
 module.exports = router;

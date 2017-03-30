@@ -67,7 +67,7 @@ router.get('/add', function (req, res, next) {
     UserModel
         .addUser(user)
         .then(function (result) {
-            req.flash('error', '添加成功');
+            req.flash('success', '添加成功');
             res.redirect('/admin/login');
         })
         .catch(function (e) {

@@ -11,8 +11,7 @@
     <body style="overflow: hidden;">
     <div class="full-bg">
         <div class="slide-bg" id="slide-bg">
-            <img src="/images/bg-01.jpg" />
-            <img src="/images/bg-05.jpg" />
+            <img src="/images/bg-08.jpg" />
         </div>
 
         <div class="login">
@@ -20,6 +19,8 @@
                 <div class="message">
                     <% if(error) { %>
                         <span><%= error %></span>
+                    <% } else if (success) { %>
+                        <span><%= success %></span>
                     <% } else { %>
                         <span>请登录账户</span>
                     <% } %>
