@@ -8,6 +8,7 @@ var express = require('express');
 var router = express.Router();
 var Common = require('../../lib/Common');
 var BehindMenuModel = require('../../models/menu-behind');
+var xss = require('xss');
 
 //获取后台菜单页面
 router.get('/', function (req, res, next) {
@@ -34,13 +35,13 @@ router.get('/add', function (req, res, next) {
 
 //添加后台菜单
 router.post('/add', function (req, res, next) {
-    var parentId = req.body.parentId;
-    var name = req.body.name;
-    var url = req.body.url;
-    var icon = req.body.icon;
-    var status = req.body.status;
-    var deep = req.body.deep;
-    var listOrder = req.body.listOrder;
+    var parentId = xss(req.body.parentId);
+    var name = xss(req.body.name);
+    var url = xss(req.body.url);
+    var icon = xss(req.body.icon);
+    var status = xss(req.body.status);
+    var deep = xss(req.body.deep);
+    var listOrder = xss(req.body.listOrder);
 
     var menu = {
         parentId : parentId,
@@ -67,7 +68,7 @@ router.post('/add', function (req, res, next) {
 
 //获取"编辑后台菜单页面"
 router.get('/edit/:_id', function (req, res, next) {
-    var _id = req.params._id;
+    var _id = xss(req.params._id);
 
     var plist = [
         BehindMenuModel.getMenuById(_id),
@@ -90,14 +91,14 @@ router.get('/edit/:_id', function (req, res, next) {
 
 //更新菜单
 router.post('/edit/:_id', function (req, res, next) {
-    var parentId = req.body.parentId;
-    var name = req.body.name;
-    var url = req.body.url;
-    var icon = req.body.icon;
-    var status = req.body.status;
-    var deep = req.body.deep;
-    var listOrder = req.body.listOrder;
-    var _id = req.body._id;
+    var parentId = xss(req.body.parentId);
+    var name = xss(req.body.name);
+    var url = xss(req.body.url);
+    var icon = xss(req.body.icon);
+    var status = xss(req.body.status);
+    var deep = xss(req.body.deep);
+    var listOrder = xss(req.body.listOrder);
+    var _id = xss(req.body._id);
 
     var menu = {
         _id: _id,
@@ -124,7 +125,7 @@ router.post('/edit/:_id', function (req, res, next) {
 
 //删除菜单
 router.get('/del/:_id', function (req, res, next) {
-    var _id = req.params._id;
+    var _id = xss(req.params._id);
 
     BehindMenuModel
         .getSubMenuById(_id)

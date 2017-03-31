@@ -9,11 +9,13 @@ var PostModel = require('../../models/post');
 var dateformat = require('dateformat');
 var config = require('config-lite');
 var Common = require('../../lib/Common');
+var xss = require('xss');
 
 //文章列表页
 router.get('/', function (req, res, next) {
 
     var page = req.query.page ? (Math.abs(parseInt(req.query.page)) > 0 ? Math.abs(parseInt(req.query.page)) : 1) : 1;
+    page = xss(page);
     if (isNaN(page)) {
         return next(new Error('类型错误'));
     }
@@ -46,15 +48,15 @@ router.get('/', function (req, res, next) {
 
 //根据类型获取文章列表
 router.get('/category/:category', function (req, res, next) {
-    console.log('/category');
 
     var page = req.query.page ? (Math.abs(parseInt(req.query.page)) > 0 ? Math.abs(parseInt(req.query.page)) : 1) : 1;
+    page = xss(page);
     if (isNaN(page)) {
         return next(new Error('类型错误'));
     }
     var limit = config.page.behindLimit;
     var skip = page ? (page-1)*limit : 0;
-    var category = req.params.category;
+    var category = xss(req.params.category);
 
     var list = [
         PostModel.getPostsCountsByCategory(category),
@@ -89,15 +91,16 @@ router.get('/add', function (req, res, next) {
 router.post('/add', function (req, res, next) {
 
     var post = {
-        category: req.body.category,
-        title: req.body.title,
-        releaseTime: new Date(req.body.releaseTime).getTime(),
-        keywords: req.body.keywords,
-        source: req.body.source,
-        excerpt: req.body.excerpt,
-        content: req.body.content,
-        author: 'Abner',
+        category: xss(req.body.category),
+        title: xss(req.body.title),
+        releaseTime: new Date(xss(req.body.releaseTime)).getTime(),
+        keywords: xss(req.body.keywords),
+        source: xss(req.body.source),
+        excerpt: xss(req.body.excerpt),
+        content: xss(req.body.content),
+        author: xss('Abner'),
     };
+
     PostModel
         .create(post)
         .then(function () {
@@ -131,16 +134,16 @@ router.get('/edit/:_id', function (req, res, next) {
 router.post('/edit/:_id', function (req, res, next) {
 
     var post = {
-        _id: req.body._id,
-        category: req.body.category,
-        title: req.body.title,
-        releaseTime: req.body.releaseTime,
-        source: req.body.source,
-        keywords: req.body.keywords,
-        excerpt: req.body.excerpt,
-        content: req.body.content,
-        status: req.body.status,
-        author: 'Abner丶Lee',
+        _id: xss(req.body._id),
+        category: xss(req.body.category),
+        title: xss(req.body.title),
+        releaseTime: xss(req.body.releaseTime),
+        source: xss(req.body.source),
+        keywords: xss(req.body.keywords),
+        excerpt: xss(req.body.excerpt),
+        content: xss(req.body.content),
+        status: xss(req.body.status),
+        author: xss('Abner丶Lee'),
     };
 
     PostModel
@@ -159,7 +162,7 @@ router.post('/edit/:_id', function (req, res, next) {
 //删除文章
 router.get('/del/:_id', function (req, res, next) {
 
-    var _id = req.params._id;
+    var _id = xss(req.params._id);
     PostModel
         .deletePostById(_id)
         .then(function () {

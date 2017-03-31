@@ -121,30 +121,4 @@ router.get('/captcha', function (req, res, next) {
     res.end();
 });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 module.exports = router;
