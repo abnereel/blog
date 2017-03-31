@@ -609,8 +609,8 @@ ul {
     background: url('../images/middle.png');
 }
 .login .middle .avatar {
-    height: 110px;
-    padding: 30px 0;
+    height: 100px;
+    padding: 25px 0;
 }
 .login .middle .avatar img {
     display: block;
@@ -661,6 +661,41 @@ ul {
     color: #999999;
 }
 .login .middle .password > input {
+    position: absolute;
+    width: inherit;
+    height: inherit;
+    background-color: transparent;
+    border: none;
+    border-bottom: 1px solid #999999;
+    text-indent: 40px;
+    outline: none;
+}
+.login .middle .captcha {
+    position: relative;
+    z-index: 100;
+    top: 60px;
+    left: 25px;
+    width: 350px;
+    height: 30px;
+}
+.login .middle .captcha > span {
+    position: absolute;
+    top: 7px;
+    left: 5px;
+    z-index: 101;
+    font-size: 16px;
+    color: #999999;
+}
+.login .middle .captcha > img {
+    position: absolute;
+    right: 0px;
+    bottom: 1px;
+    z-index: 101;
+    cursor: pointer;
+    width: 100px;
+    height: 30px;
+}
+.login .middle .captcha > input {
     position: absolute;
     width: inherit;
     height: inherit;

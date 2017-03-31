@@ -11,6 +11,7 @@
     <body style="overflow: hidden;">
     <div class="full-bg">
         <div class="slide-bg" id="slide-bg">
+            <img src="/images/bg-01.jpg" />
             <img src="/images/bg-08.jpg" />
         </div>
 
@@ -33,10 +34,15 @@
                     </div>
                     <div class="password">
                         <span class="glyphicon glyphicon-lock"></span>
-                        <input id="user" type="password" name="password" placeholder="请输入密码" autocomplete="off">
+                        <input id="password" type="password" name="password" placeholder="请输入密码" autocomplete="off">
+                    </div>
+                    <div class="captcha">
+                        <span class="glyphicon glyphicon-qrcode"></span>
+                        <img id="captcha-btn" src="<%= url %>" title="点击更新验证码" />
+                        <input id="captcha" type="text" name="captcha" placeholder="请输入验证码" autocomplete="off" />
                     </div>
                 </div>
-                <div class="submit"><input type="submit" value="登录"></div>
+                <div class="submit"><input type="submit" id="submit" value="登录"></div>
             </form>
         </div>
     </div>
@@ -52,6 +58,50 @@
         var timer = setInterval(changeSlide, 5000);
         $("#slide-bg > img").eq(0).addClass("curr");
     });
+
+    /**
+     * 登录提交验证
+     */
+    $("#submit").on("click", function () {
+        var name = $("#name").val();
+        var password = $("#password").val();
+        var captcha = $("#captcha").val();
+        var reg = new RegExp(/^\w+$/);
+
+        try {
+            if (!(name.length >= 1 && name.length <= 10)) {
+                throw new Error('用户名限制在1-10个字符');
+            }
+            if (!(password.length >= 6 && password.length <= 18)) {
+                throw new Error('密码限制在6-18个字符');
+            }
+            if (!reg.test(name)) {
+                throw new Error('用户名只能由英文、数字、下划线组成');
+            }
+            if (!reg.test(password)) {
+                throw new Error('密码只能由英文、数字、下划线组成');
+            }
+            if (!(captcha.length == 6)) {
+                throw new Error('验证码不正确');
+            }
+        } catch(e) {
+            alert(e.message);
+            return false;
+        }
+    });
+
+    /**
+     * 更新验证码
+     */
+    $("#captcha-btn").on("click", function () {
+        $.ajax({
+            url: '/admin/login/captcha',
+            method: 'get',
+            success: function (data) {
+                $("#captcha-btn").attr("src", data);
+            }
+        });
+    })
 
     /**
      * 全屏背景幻灯片
