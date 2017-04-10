@@ -3,10 +3,10 @@ module.exports = {
     session: {
         secret: 'blog',
         key: 'blog',
-        maxAge: 2592000000
+        maxAge: 1*60*60*1000
     },
     page: {
-        frontLimit: 6,
+        frontLimit: 12,
         behindLimit: 10
     }
 }

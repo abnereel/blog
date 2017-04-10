@@ -8,13 +8,31 @@ var FrontMenuModel = require('../../models/menu-front');
 var dateformat = require('dateformat');
 var async = require('async');
 var Common = require('../../lib/Common');
+var xss = require('xss');
+var config = require('config-lite');
 
 //首页
 router.get('/home', function (req, res, next) {
 
-    PostModel
-        .getPostsList()
-        .then(function (result) {
+    var page = req.query.page ? (Math.abs(parseInt(req.query.page)) > 0 ? Math.abs(parseInt(req.query.page)) : 1) : 1;
+    page = xss(page);
+    if (isNaN(page)) {
+        return next(new Error('类型错误'));
+    }
+    var limit = config.page.frontLimit;
+    var skip = page ? (page-1)*limit : 0;
+
+    var list = [
+        PostModel.getPostsCounts(),
+        PostModel.getPostsList(limit, skip)
+    ];
+
+    Promise
+        .all(list)
+        .then(function (results) {
+            var counts = results[0];
+            var result = results[1];
+            var paging = Common.paging(page, counts, limit, '/post/home', '?page', 5);
             result.forEach(function (item) {
                 item.date = dateformat(new Date(item.releaseTime).getTime(), 'yyyy-mm-dd');
             });
@@ -25,7 +43,10 @@ router.get('/home', function (req, res, next) {
                 }
             }
             res.render('index/post', {
-                posts: result
+                posts: result,
+                paging: paging,
+                counts: counts,
+                frontLimit: config.page.frontLimit
             });
         })
         .catch(next);
@@ -35,7 +56,15 @@ router.get('/home', function (req, res, next) {
 //显示文章列表
 router.get('/:category', function (req, res, next) {
 
-    var url = req.originalUrl
+    var page = req.query.page ? (Math.abs(parseInt(req.query.page)) > 0 ? Math.abs(parseInt(req.query.page)) : 1) : 1;
+    page = xss(page);
+    if (isNaN(page)) {
+        return next(new Error('类型错误'));
+    }
+    var limit = config.page.frontLimit;
+    var skip = page ? (page-1)*limit : 0;
+
+    var url = '/post/' + xss(req.params.category);
     async.waterfall([
         function (cb) {
             FrontMenuModel
@@ -49,15 +78,25 @@ router.get('/:category', function (req, res, next) {
         },
         function (category, cb) {
             PostModel
-                .getPostsByCategory(category)
+                .getPostsCountsByCategory(category)
+                .then(function (counts) {
+                    cb(null, category, counts);
+                })
+                .catch(function (e) {
+                    cb(e, null);
+                });
+        },
+        function (category, counts, cb) {
+            PostModel
+                .getPostsByCategory(category, limit, skip)
                 .then(function (result) {
-                    cb(null, result, category);
+                    cb(null, result, category, counts);
                 })
                 .catch(function (e) {
                     cb(e, null);
                 });
         }
-    ], function (err, result, category) {
+    ], function (err, result, category, counts) {
         if (err) {
             //参数错误
             if (err.name.toString() == 'TypeError' || err.name.toString() == 'CastError') {
@@ -65,11 +104,15 @@ router.get('/:category', function (req, res, next) {
             }
             next(err);
         }
+        var paging = Common.paging(page, counts, limit, url, '?page', 5);
         result.forEach(function (item) {
             item.date = dateformat(new Date(item.releaseTime).getTime(), 'yyyy-mm-dd');
         });
         res.render('index/post', {
-            posts: result
+            posts: result,
+            paging: paging,
+            counts: counts,
+            frontLimit: config.page.frontLimit
         });
     });
 });
@@ -78,7 +121,7 @@ router.get('/:category', function (req, res, next) {
 //查看文章
 router.get('/:category/:_id', function (req, res, next) {
 
-    var _id = req.params._id;
+    var _id = xss(req.params._id);
     //检查参数长度是否正确（ObjectId的长度固定为24位）
     if (_id.length != 24) {
         return res.redirect('/index/404');

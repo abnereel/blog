@@ -10,6 +10,10 @@
         <% for (var post of posts) { %>
             <%- include ./components/post-block %>
         <% } %>
+
+        <% if (counts > frontLimit) { %>
+            <%- paging %>
+        <% } %>
     </div>
     <div class="module-area">
         <%- include ./components/introduce %>

@@ -17,12 +17,20 @@ router.get('/', function (req, res, next) {
         canvas = new Canvas(100, 30),
         ctx = canvas.getContext('2d');
 
-    ctx.font = '30px Impact';
+    ctx.font = '24px Impact';
     ctx.fillStyle = "#5e6b84";
     ctx.fillText(text, 0, 26, ctx.measureText(text).width);
     req.session.captcha = text;
+
+    /*var tokens = new Tokens();
+    var secret = tokens.secretSync();
+    var token = tokens.create(secret);
+    req.session._csrf.token = token;
+    req.session._csrf.secret = secret;*/
+
     res.render('admin/login', {
-        url: canvas.toDataURL()
+        url: canvas.toDataURL(),
+        _csrf: req.session._csrf
     });
 });
 
@@ -31,9 +39,13 @@ router.post('/', function (req, res, next) {
     var name = xss(req.body.name)
     var password = xss(req.body.password);
     var captcha = xss(req.body.captcha);
+    var _csrf = xss(req.body._csrf);
     var reg = new RegExp(/^\w+$/);
 
     try {
+        if (!(_csrf == req.session._csrf)) {
+            throw new Error('Invalid Token');
+        }
         if (!(name.length >= 1 && name.length <= 10)) {
             throw new Error('用户名限制在1-10个字符');
         }
@@ -66,6 +78,8 @@ router.post('/', function (req, res, next) {
                 req.flash('error', '用户名或密码错误');
                 return res.redirect('/admin/login');
             }
+            //先将document转换成js对象
+            result = result.toObject();
             delete result.password;
             req.session.user = result;
             req.flash('success', '登录成功');

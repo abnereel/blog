@@ -29,12 +29,22 @@ router.get('/add', function (req, res, next) {
         .getMenuList()
         .then(function (result) {
             var menuTree = Common.getMenuTree(result);
-            res.render('admin/menu/behind-add', { menuTree: menuTree });
+            res.render('admin/menu/behind-add', {
+                menuTree: menuTree,
+                _csrf: req.session._csrf
+            });
         }).catch(next);
 });
 
 //添加后台菜单
 router.post('/add', function (req, res, next) {
+
+    var _csrf = xss(req.body._csrf);
+    if (!(_csrf == req.session._csrf)) {
+        req.flash('error', 'Invalid Token');
+        return res.redirect('back');
+    }
+
     var parentId = xss(req.body.parentId);
     var name = xss(req.body.name);
     var url = xss(req.body.url);
@@ -83,7 +93,8 @@ router.get('/edit/:_id', function (req, res, next) {
 
             res.render('admin/menu/behind-edit', {
                 menu: menu,
-                menuTree: menuTree
+                menuTree: menuTree,
+                _csrf: req.session._csrf
             });
         })
         .catch(next);
@@ -91,6 +102,13 @@ router.get('/edit/:_id', function (req, res, next) {
 
 //更新菜单
 router.post('/edit/:_id', function (req, res, next) {
+
+    var _csrf = xss(req.body._csrf);
+    if (!(_csrf == req.session._csrf)) {
+        req.flash('error', 'Invalid Token');
+        return res.redirect('back');
+    }
+
     var parentId = xss(req.body.parentId);
     var name = xss(req.body.name);
     var url = xss(req.body.url);

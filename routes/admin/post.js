@@ -84,11 +84,19 @@ router.get('/category/:category', function (req, res, next) {
 
 //添加文章页
 router.get('/add', function (req, res, next) {
-    res.render('admin/post/add');
+    res.render('admin/post/add',{
+        _csrf: req.session._csrf
+    });
 });
 
 //发布文章
 router.post('/add', function (req, res, next) {
+
+    var _csrf = xss(req.body._csrf);
+    if (!(_csrf == req.session._csrf)) {
+        req.flash('error', 'Invalid Token');
+        return res.redirect('back');
+    }
 
     var post = {
         category: xss(req.body.category),
@@ -117,14 +125,15 @@ router.post('/add', function (req, res, next) {
 //编辑文章页
 router.get('/edit/:_id', function (req, res, next) {
 
-    var _id = req.params._id;
+    var _id = xss(req.params._id);
     PostModel
         .getPostById(_id)
         .then(function (result) {
             result.date = dateformat(new Date(result.releaseTime).getTime(), 'yyyy-mm-dd HH:MM:ss');
             //result.content = Common.html_decode(result.content);
             res.render('admin/post/edit',{
-                post: result
+                post: result,
+                _csrf: req.session._csrf
             });
         })
         .catch(next);
@@ -132,6 +141,12 @@ router.get('/edit/:_id', function (req, res, next) {
 
 //更新文章
 router.post('/edit/:_id', function (req, res, next) {
+
+    var _csrf = xss(req.body._csrf);
+    if (!(_csrf == req.session._csrf)) {
+        req.flash('error', 'Invalid Token');
+        return res.redirect('back');
+    }
 
     var post = {
         _id: xss(req.body._id),

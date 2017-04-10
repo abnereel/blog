@@ -41,6 +41,7 @@
                         <img id="captcha-btn" src="<%= url %>" title="点击更新验证码" />
                         <input id="captcha" type="text" name="captcha" placeholder="请输入验证码" autocomplete="off" />
                     </div>
+                    <input type="hidden" name="_csrf" value="<%= _csrf %>" />
                 </div>
                 <div class="submit"><input type="submit" id="submit" value="登录"></div>
             </form>
