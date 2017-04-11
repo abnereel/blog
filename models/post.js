@@ -91,19 +91,9 @@ module.exports = {
      * 根据指定_id更新文章内容
      * @param post  要更新的文章内容对象
      */
-    updatePostById: function (post) {
+    updatePostById: function (content) {
         return Post
-            .update({ _id: post._id }, {$set: {
-                category: post.category,
-                title: post.title,
-                releaseTime: post.releaseTime,
-                source: post.source,
-                keywords: post.keywords,
-                excerpt: post.excerpt,
-                content: post.content,
-                status: post.status,
-                author: post.author,
-            }});
+            .update({ _id: content._id }, {$set: content});
     },
 
     /**

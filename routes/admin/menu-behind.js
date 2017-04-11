@@ -149,7 +149,8 @@ router.get('/del/:_id', function (req, res, next) {
         .getSubMenuById(_id)
         .then(function (result) {
             if (result.length > 0) {
-                throw new Error("删除失败，请先删除子菜单再删除父菜单");
+                req.flash("error", '删除失败，请先删除子菜单再删除父菜单');
+                return res.redirect('/admin/menu/behind');
             }
             BehindMenuModel
                 .deleteMenuById(_id)

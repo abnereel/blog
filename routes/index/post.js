@@ -14,8 +14,8 @@ var config = require('config-lite');
 //首页
 router.get('/home', function (req, res, next) {
 
-    var page = req.query.page ? (Math.abs(parseInt(req.query.page)) > 0 ? Math.abs(parseInt(req.query.page)) : 1) : 1;
-    page = xss(page);
+    var page = xss(req.query.page);
+    page = page ? (Math.abs(parseInt(page)) > 0 ? Math.abs(parseInt(page)) : 1) : 1;
     if (isNaN(page)) {
         return next(new Error('类型错误'));
     }
@@ -38,10 +38,13 @@ router.get('/home', function (req, res, next) {
             });
             //过滤博客声明
             for (var i=0; i<result.length; i++) {
-                if (result[i].category.url == '/licence') {
-                    result.splice(i, 1);
+                if (result[i].category) {
+                    if (result[i].category.url == '/licence') {
+                        result.splice(i, 1);
+                    }
                 }
             }
+
             res.render('index/post', {
                 posts: result,
                 paging: paging,

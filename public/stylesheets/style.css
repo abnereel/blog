@@ -122,7 +122,7 @@ ul {
 .main > .post-area {
     float: left;
     width: 60%;
-    height: 100%;
+    height: inherit;
 }
 .main > .post-area > .search {
     margin: 30px 20px;
@@ -146,8 +146,8 @@ ul {
 .main > .post-area > .post-content {
     padding: 0 20px;
     margin: 0 20px 0px 20px;
-    height: 100%;
     background: #ffffff;
+    overflow: hidden;
 }
 .main > .post-area > .post-content > h3 {
     text-align: center;
@@ -163,7 +163,8 @@ ul {
 .main > .post-area > .post-content > div {
     text-align: justify;
     line-height: 24px;
-    margin-bottom: 50px;
+    padding-bottom: 50px;
+    overflow: hidden;
 }
 .main > .post-area > .post-block {
     padding: 20px;

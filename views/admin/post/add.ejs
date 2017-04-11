@@ -9,7 +9,7 @@
     </nav>
 
     <div class="post-add">
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             <div class="input-block clearfix">
                 <label for="category">文章分类</label>
                 <select name="category" id="category">
@@ -24,13 +24,13 @@
 
             <div class="input-block clearfix">
                 <label for="title">文章标题</label>
-                <input type="text" name="title" id="title" placeholder="请输入标题">
+                <input type="text" name="title" id="title" placeholder="请输入标题，标题为必选项">
                 <input type="hidden" name="_csrf" value="<%= _csrf %>">
             </div>
 
             <div class="input-block clearfix">
                 <label for="releaseTime">发布时间</label>
-                <input type="text" name="releaseTime" id="datetimepicker">
+                <input type="text" name="releaseTime" id="datetimepicker" placeholder="发布时间为必选项">
             </div>
 
             <div class="input-block clearfix">
@@ -43,7 +43,7 @@
                 <input type="text" name="source" id="source" placeholder="请输入文章来源，若无可为空">
             </div>
 
-            <!--<div class="input-block clearfix input-block-file">
+            <div class="input-block clearfix input-block-file">
                 <label for="title">上传图片</label>
                 <div class="div-file clearfix">
                     <div class="customFile">
@@ -53,15 +53,15 @@
                     <input type="file" name="imgPath" accept="image/*" id="fileupload" class="input-file">
                 </div>
                 <div class="imgList" id="imgList"></div>
-            </div>-->
-
-            <div class="input-block clearfix">
-                <label for="excerpt">文章摘要</label>
-                <textarea name="excerpt" id="excerpt" placeholder="请输入摘要，若无可为空"></textarea>
             </div>
 
             <div class="input-block clearfix">
-                <label for="content">文章内容</label>
+                <label for="excerpt">文章摘要</label>
+                <textarea name="excerpt" id="excerpt" placeholder="请输入摘要，摘要为必选项"></textarea>
+            </div>
+
+            <div class="input-block clearfix">
+                <label for="editor">文章内容</label>
                 <div id="editor" name="content" style="height:500px;"></div>
             </div>
 
@@ -83,7 +83,7 @@
 <script src="/javascripts/ueditor/ueditor.all.min.js"> </script>
 <script src="/javascripts/ueditor/lang/zh-cn/zh-cn.js"></script>
 <script>
-    /*$("#fileupload").on("change", function () {
+    $("#fileupload").on("change", function () {
         $("#imgList").html("");
         var length = this.files.length;
         var files = this.files;
@@ -100,13 +100,15 @@
         }
     });
 
-    $("#imgList").on("click", "img", function () {
-       if ($(this).hasClass("curr")) {
-           $(this).removeClass("curr");
-       } else {
-           $(this).addClass("curr");
-       }
-    });*/
+    $("#form1").on("submit", function () {
+        var title = $("#title").val();
+        var datetimepicker = $("#datetimepicker").val();
+        var excerpt = $("#excerpt").val();
+        if (!title || !datetimepicker || !excerpt) {
+            alert('标题、发布时间、文章摘要、文章内容为必填选项');
+            return false;
+        }
+    });
 
     $(function () {
         $('#datetimepicker').prop("readonly", true).datetimepicker();

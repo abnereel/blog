@@ -10,12 +10,24 @@ var dateformat = require('dateformat');
 var config = require('config-lite');
 var Common = require('../../lib/Common');
 var xss = require('xss');
+var multer = require('multer');
+
+var storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, 'public/uploads/')
+    },
+    filename: function (req, file, cb) {
+        cb(null,  Date.now() + file.originalname);
+    }
+});
+var upload = multer({ storage: storage });
+
 
 //文章列表页
 router.get('/', function (req, res, next) {
 
-    var page = req.query.page ? (Math.abs(parseInt(req.query.page)) > 0 ? Math.abs(parseInt(req.query.page)) : 1) : 1;
-    page = xss(page);
+    var page = xss(req.query.page);
+    page = page ? (Math.abs(parseInt(page)) > 0 ? Math.abs(parseInt(page)) : 1) : 1;
     if (isNaN(page)) {
         return next(new Error('类型错误'));
     }
@@ -49,8 +61,8 @@ router.get('/', function (req, res, next) {
 //根据类型获取文章列表
 router.get('/category/:category', function (req, res, next) {
 
-    var page = req.query.page ? (Math.abs(parseInt(req.query.page)) > 0 ? Math.abs(parseInt(req.query.page)) : 1) : 1;
-    page = xss(page);
+    var page = xss(req.query.page);
+    page = page ? (Math.abs(parseInt(page)) > 0 ? Math.abs(parseInt(page)) : 1) : 1;
     if (isNaN(page)) {
         return next(new Error('类型错误'));
     }
@@ -90,11 +102,37 @@ router.get('/add', function (req, res, next) {
 });
 
 //发布文章
-router.post('/add', function (req, res, next) {
+router.post('/add', upload.single('imgPath'), function (req, res, next) {
 
     var _csrf = xss(req.body._csrf);
     if (!(_csrf == req.session._csrf)) {
         req.flash('error', 'Invalid Token');
+        return res.redirect('back');
+    }
+
+    var option = xss.getDefaultWhiteList();
+    for(var o in option) {
+        option[o].push('style')
+    }
+    var myxss = new xss.FilterXSS({
+        whiteList: option
+    });
+
+    try {
+        if (!req.body.title) {
+            throw new Error('发布失败，标题为必填选项');
+        }
+        if (!req.body.excerpt) {
+            throw new Error('发布失败，描述为必填选项');
+        }
+        if (!req.body.content) {
+            throw new Error('发布失败，内容为必填选项');
+        }
+        if (!req.body.releaseTime) {
+            throw new Error('发布失败，发布时间为必填选项');
+        }
+    } catch (e) {
+        req.flash('error', e.message);
         return res.redirect('back');
     }
 
@@ -105,9 +143,13 @@ router.post('/add', function (req, res, next) {
         keywords: xss(req.body.keywords),
         source: xss(req.body.source),
         excerpt: xss(req.body.excerpt),
-        content: xss(req.body.content),
-        author: xss('Abner'),
+        content: myxss.process(req.body.content),
+        author: xss(req.session.user.name),
     };
+
+    if (req.file) {
+        post.imgPath = req.file.path.substr(6);//去掉public，否则前端显示会有问题
+    }
 
     PostModel
         .create(post)
@@ -140,13 +182,21 @@ router.get('/edit/:_id', function (req, res, next) {
 });
 
 //更新文章
-router.post('/edit/:_id', function (req, res, next) {
+router.post('/edit/:_id', upload.single('imgPath'), function (req, res, next) {
 
     var _csrf = xss(req.body._csrf);
     if (!(_csrf == req.session._csrf)) {
         req.flash('error', 'Invalid Token');
         return res.redirect('back');
     }
+
+    var option = xss.getDefaultWhiteList();
+    for(var o in option) {
+        option[o].push('style')
+    }
+    var myxss = new xss.FilterXSS({
+        whiteList: option
+    });
 
     var post = {
         _id: xss(req.body._id),
@@ -156,10 +206,14 @@ router.post('/edit/:_id', function (req, res, next) {
         source: xss(req.body.source),
         keywords: xss(req.body.keywords),
         excerpt: xss(req.body.excerpt),
-        content: xss(req.body.content),
+        content: myxss.process(req.body.content),
         status: xss(req.body.status),
-        author: xss('Abner丶Lee'),
+        author: xss(req.session.user.name)
     };
+
+    if (req.file) {
+        post.imgPath = req.file.path.substr(6);//去掉public，否则前端显示会有问题
+    }
 
     PostModel
         .updatePostById(post)

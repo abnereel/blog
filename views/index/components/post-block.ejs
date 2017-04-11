@@ -1,3 +1,5 @@
+<!--过滤掉没有对应分类的文章-->
+<% if (post.category) { %>
 <div class="post-block">
     <div class="title"><a title="<%= post.title %>" href="<%= post.category.url %>/<%= post._id %>"><%= post.title %></a></div>
     <div class="description"><p><%= post.excerpt %></p></div>
@@ -16,3 +18,4 @@
         </div>-->
     </div>
 </div>
+<% } %>

@@ -9,7 +9,7 @@
         </nav>
 
         <div class="menu-add">
-            <form method="post">
+            <form method="post" id="form1">
                 <div>
                     <label>上级菜单</label>
                     <select name="parentId" id="parentMenu">
@@ -31,11 +31,11 @@
                 </div>
                 <div>
                     <label>菜单名称</label>
-                    <input type="text" name="name" placeholder="请输入菜单名称">
+                    <input type="text" name="name" id="name" placeholder="请输入菜单名称">
                 </div>
                 <div>
                     <label>菜单地址</label>
-                    <input type="text" name="url" placeholder="建议二级菜单地址包含一级菜单地址">
+                    <input type="text" name="url" id="url" placeholder="建议二级菜单地址包含一级菜单地址">
                 </div>
                 <div>
                     <label>菜单图标</label>
@@ -61,6 +61,16 @@
                 $(function () {
                     $("#parentMenu").on("change", function () {
                         $("#deep").val(parseInt($("#parentMenu option:selected").attr("deep")) + 1);
+                    });
+
+                    $("#form1").on("submit", function () {
+                        var name = $("#name").val();
+                        var url = $("#url").val();
+
+                        if (!name || !url) {
+                            alert("菜单名称和菜单地址为必填选项");
+                            return false;
+                        }
                     });
                 });
             </script>

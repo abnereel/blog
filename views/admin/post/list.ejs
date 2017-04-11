@@ -33,7 +33,9 @@
                 <a class="post-edit" href="/admin/content/post/edit/<%= post._id %>">编辑</a>
                 <span class="post-status"><%= post.status ? '显示' : '隐藏' %></span>
                 <span class="post-releaseTime"><%= post.date %></span>
+                <% if (post.category) { %>
                 <span class="post-category"><%= post.category.name %></span>
+                <% } %>
             </li>
             <% } %>
         </ul>
