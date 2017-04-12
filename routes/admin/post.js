@@ -1,7 +1,6 @@
 /**
  * Created by liqian on 2017/3/13.
  */
-var path = require('path');
 var express = require('express');
 var router = express.Router();
 var ueditor = require('ueditor');
@@ -57,7 +56,8 @@ router.get('/', function (req, res, next) {
             res.render('admin/post/list', {
                 posts: result,
                 paging: paging,
-                category: 0
+                category: 0,
+                _csrf: req.session._csrf
             });
         })
         .catch(next);
@@ -115,6 +115,7 @@ router.post('/add', function (req, res, next) {
             req.flash('error', err.message);
             return res.redirect('back');
         } else {
+            //csrf检查
             var _csrf = xss(req.body._csrf);
             if (!(_csrf == req.session._csrf)) {
                 req.flash('error', 'Invalid Token');
@@ -129,17 +130,26 @@ router.post('/add', function (req, res, next) {
                 whiteList: option
             });
 
+            var category = xss(req.body.category);
+            var title = xss(req.body.title);
+            var releaseTime = xss(req.body.releaseTime);
+            var keywords = xss(req.body.keywords);
+            var source = xss(req.body.source);
+            var excerpt = xss(req.body.excerpt);
+            var content = myxss.process(req.body.content);
+            var author = xss(req.session.user.name);
+
             try {
-                if (!req.body.title) {
+                if (!title) {
                     throw new Error('发布失败，标题为必填选项');
                 }
-                if (!req.body.excerpt) {
+                if (!excerpt) {
                     throw new Error('发布失败，描述为必填选项');
                 }
-                if (!req.body.content) {
+                if (!content) {
                     throw new Error('发布失败，内容为必填选项');
                 }
-                if (!req.body.releaseTime) {
+                if (!releaseTime) {
                     throw new Error('发布失败，发布时间为必填选项');
                 }
             } catch (e) {
@@ -148,18 +158,18 @@ router.post('/add', function (req, res, next) {
             }
 
             var post = {
-                category: xss(req.body.category),
-                title: xss(req.body.title),
-                releaseTime: new Date(xss(req.body.releaseTime)).getTime(),
-                keywords: xss(req.body.keywords),
-                source: xss(req.body.source),
-                excerpt: xss(req.body.excerpt),
-                content: myxss.process(req.body.content),
-                author: xss(req.session.user.name),
+                category: category,
+                title: title,
+                releaseTime: releaseTime,
+                keywords: keywords,
+                source: source,
+                excerpt: excerpt,
+                content: content,
+                author: author,
             };
 
             if (req.file) {
-                post.imgPath = req.file.path.substr(6);//去掉public，否则前端显示会有问题
+                post.imgPath = xss(req.file.path).substr(6);//去掉public，否则前端显示会有问题
             }
 
             PostModel
@@ -169,12 +179,11 @@ router.post('/add', function (req, res, next) {
                     res.redirect('/admin/content/post/add');
                 })
                 .catch(function (e) {
-                    req.flash('error', '发布失败');
-                    res.redirect('/admin/content/post/add');
-                    next(e);
+                    req.flash('error', '发布失败，' + e.message);
+                    res.redirect('back');
                 });
         }
-    })
+    });
 });
 
 //编辑文章页
@@ -185,7 +194,6 @@ router.get('/edit/:_id', function (req, res, next) {
         .getPostById(_id)
         .then(function (result) {
             result.date = dateformat(new Date(result.releaseTime).getTime(), 'yyyy-mm-dd HH:MM:ss');
-            //result.content = Common.html_decode(result.content);
             res.render('admin/post/edit',{
                 post: result,
                 _csrf: req.session._csrf
@@ -203,6 +211,7 @@ router.post('/edit/:_id', function (req, res, next) {
             req.flash('error', err.message);
             return res.redirect('back');
         } else {
+            //csrf检查
             var _csrf = xss(req.body._csrf);
             if (!(_csrf == req.session._csrf)) {
                 req.flash('error', 'Invalid Token');
@@ -217,21 +226,50 @@ router.post('/edit/:_id', function (req, res, next) {
                 whiteList: option
             });
 
+            var _id = xss(req.body._id);
+            var category = xss(req.body.category);
+            var title = xss(req.body.title);
+            var releaseTime = xss(req.body.releaseTime);
+            var keywords = xss(req.body.keywords);
+            var source = xss(req.body.source);
+            var excerpt = xss(req.body.excerpt);
+            var content = myxss.process(req.body.content);
+            var status = xss(req.body.status);
+            var author = xss(req.session.user.name);
+
+            try {
+                if (!title) {
+                    throw new Error('修改失败，标题为必填选项');
+                }
+                if (!excerpt) {
+                    throw new Error('修改失败，描述为必填选项');
+                }
+                if (!content) {
+                    throw new Error('修改失败，内容为必填选项');
+                }
+                if (!releaseTime) {
+                    throw new Error('修改失败，发布时间为必填选项');
+                }
+            } catch (e) {
+                req.flash('error', e.message);
+                return res.redirect('back');
+            }
+
             var post = {
-                _id: xss(req.body._id),
-                category: xss(req.body.category),
-                title: xss(req.body.title),
-                releaseTime: xss(req.body.releaseTime),
-                source: xss(req.body.source),
-                keywords: xss(req.body.keywords),
-                excerpt: xss(req.body.excerpt),
-                content: myxss.process(req.body.content),
-                status: xss(req.body.status),
-                author: xss(req.session.user.name)
+                _id: _id,
+                category: category,
+                title: title,
+                releaseTime: releaseTime,
+                keywords: keywords,
+                source: source,
+                excerpt: excerpt,
+                content: content,
+                status: status,
+                author: author,
             };
 
             if (req.file) {
-                post.imgPath = req.file.path.substr(6);//去掉public，否则前端显示会有问题
+                post.imgPath = xss(req.file.path).substr(6);//去掉public，否则前端显示会有问题
             }
 
             PostModel
@@ -241,18 +279,27 @@ router.post('/edit/:_id', function (req, res, next) {
                     res.redirect('/admin/content/post/edit/'+req.body._id);
                 })
                 .catch(function (e) {
-                    req.flash('error', '更新失败');
-                    res.redirect('/admin/content/post');
-                    next(e);
+                    req.flash('error', '更新失败，' + e.message);
+                    res.redirect('back');
                 });
         }
-    })
+    });
 });
 
 //删除文章
 router.get('/del/:_id', function (req, res, next) {
 
+    //csrf检查
+    var _csrf = xss(req.query._csrf);
+    console.log(_csrf);
+    console.log(req.session._csrf);
+    if (_csrf != req.session._csrf) {
+        req.flash('error', 'Invalid Token');
+        return res.redirect('back');
+    }
+
     var _id = xss(req.params._id);
+
     PostModel
         .deletePostById(_id)
         .then(function () {
@@ -260,9 +307,8 @@ router.get('/del/:_id', function (req, res, next) {
             res.redirect('/admin/content/post');
         })
         .catch(function (e) {
-            req.flash('error', '删除失败');
+            req.flash('error', '删除失败，' + e.message);
             res.redirect('/admin/content/post');
-            next(e);
         });
 })
 

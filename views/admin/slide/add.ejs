@@ -1,0 +1,94 @@
+<%- include ../header %>
+
+<div class="slide-style">
+    <nav class="inner-nav">
+        <ul class="nav nav-pills">
+            <li role="presentation"><a href="/admin/content/slide">所有幻灯片</a></li>
+            <li role="presentation" class="active"><a href="/admin/content/slide/add">添加幻灯片</a></li>
+        </ul>
+    </nav>
+
+    <div class="slide-add">
+        <form method="post" id="form1" enctype="multipart/form-data">
+            <div class="input-block clearfix">
+                <label for="name">标题</label>
+                <input type="text" name="name" id="name" placeholder="此项必选项">
+                <input type="hidden" name="_csrf" value="<%= _csrf %>">
+            </div>
+
+            <div class="input-block clearfix">
+                <label for="category">分类标识</label>
+                <input type="text" name="category" id="category" placeholder="此项为必选项，建议使用英文字符串">
+            </div>
+
+            <div class="input-block clearfix">
+                <label for="url">跳转地址</label>
+                <input type="text" name="url" id="url" placeholder="若无则为空">
+            </div>
+
+            <div class="input-block clearfix input-block-file">
+                <label for="title">上传图片</label>
+                <div class="div-file clearfix">
+                    <div class="customFile">
+                        <span class="glyphicon glyphicon-plus"></span>
+                        <span>上传图片</span>
+                    </div>
+                    <input type="file" name="imgPath" accept="image/*" id="fileupload" class="input-file">
+                </div>
+                <div class="imgList" id="imgList"></div>
+            </div>
+
+            <div class="input-block clearfix">
+                <label for="excerpt">描述</label>
+                <textarea name="excerpt" id="excerpt" placeholder="若无则为空"></textarea>
+            </div>
+
+            <div class="input-block clearfix">
+                <label for="listOrder">排序</label>
+                <input type="text" name="listOrder" id="listOrder" placeholder="若无则为空" value="1">
+            </div>
+
+            <div class="input-block clearfix">
+                <label>是否显示</label>
+                <select name="status">
+                    <option value="1">显示</option>
+                    <option value="0">隐藏</option>
+                </select>
+            </div>
+
+            <div class="input-block clearfix">
+                <input class="submit" type="submit" value="添加">
+                <a class="goback" href="/admin/content/slide">返回</a>
+            </div>
+        </form>
+    </div>
+</div>
+<%- include ../components/dialog-confirm %>
+<%- include ../footer %>
+<script>
+    $("#fileupload").on("change", function () {
+        $("#imgList").html("");
+        var length = this.files.length;
+        var files = this.files;
+        for (var i=0; i<length; i++) {
+            if (files[i].size > 1024*1024*10) {
+                alert('图片大小不能超过10M');
+                return false;
+            }
+
+            //获取window的URL工具
+            var URL = window.URL || window.webkitURL;
+            var imgUrl = URL.createObjectURL(files[i]);
+            $("#imgList").append($("<img/>").attr("src", imgUrl));
+        }
+    });
+
+    $("#form1").on("submit", function () {
+        var name = $("#name").val();
+        var category = $("#category").val();
+        if (!name || !category) {
+            alert('标题、分类标识为必填选项');
+            return false;
+        }
+    });
+</script>

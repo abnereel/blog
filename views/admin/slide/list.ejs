@@ -1,0 +1,38 @@
+<%- include ../header %>
+
+<div class="slide-style">
+    <nav class="inner-nav">
+        <ul class="nav nav-pills">
+            <li role="presentation" class="active"><a href="/admin/content/slide">所有幻灯片</a></li>
+            <li role="presentation"><a href="/admin/content/slide/add">添加幻灯片</a></li>
+        </ul>
+    </nav>
+
+    <div class="slide-list">
+        <ul>
+            <li class="clearfix">
+                <span class="slide-name">标题</span>
+                <span class="slide-del">删除</span>
+                <span class="slide-edit">编辑</span>
+                <span class="slide-status">状态</span>
+                <span class="slide-listOrder">排序</span>
+                <span class="slide-category">分类标识</span>
+            </li>
+            <% for (var slide of slides) { %>
+            <li class="clearfix">
+                <span class="slide-name"><%= slide.name %></span>
+                <a class="slide-del" href="javascript:void(0);" onclick="confirm(this)" url="/admin/content/slide/del/<%= slide._id %>?_csrf=<%= _csrf %>">删除</a>
+                <a class="slide-edit" href="/admin/content/slide/edit/<%= slide._id %>">编辑</a>
+                <span class="slide-status"><%= slide.status ? '显示' : '隐藏' %></span>
+                <% if (slide.listOrder == null) slide.listOrder = 0 %>
+                <span class="slide-listOrder"><%= slide.listOrder %></span>
+                <span class="slide-category"><%= slide.category %></span>
+            </li>
+            <% } %>
+        </ul>
+        <%- paging %>
+    </div>
+</div>
+<%- include ../components/dialog-confirm %>
+<%- include ../footer %>
+

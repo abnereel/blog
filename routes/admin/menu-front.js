@@ -10,7 +10,7 @@ var Common = require('../../lib/Common');
 var FrontMenuModel = require('../../models/menu-front');
 var xss = require('xss');
 
-//获取后台菜单页面
+//获取前台菜单页面
 router.get('/', function (req, res, next) {
 
     FrontMenuModel
@@ -18,13 +18,14 @@ router.get('/', function (req, res, next) {
         .then(function (result) {
             var menuTree = Common.getMenuTree(result);
             res.render('admin/menu/front-list', {
-                menuTree: menuTree
+                menuTree: menuTree,
+                _csrf: req.session._csrf
             });
         })
         .catch(next);
 });
 
-//获取"添加后台菜单页面"
+//获取"添加前台菜单页面"
 router.get('/add', function (req, res, next) {
 
     FrontMenuModel
@@ -38,9 +39,10 @@ router.get('/add', function (req, res, next) {
         }).catch(next);
 });
 
-//添加后台菜单
+//添加前台菜单
 router.post('/add', function (req, res, next) {
 
+    //csrf检查
     var _csrf = xss(req.body._csrf);
     if (!(_csrf == req.session._csrf)) {
         req.flash('error', 'Invalid Token');
@@ -72,13 +74,13 @@ router.post('/add', function (req, res, next) {
             res.redirect('/admin/menu/front/add');
         })
         .catch(function (e) {
-            req.flash('error', '添加失败');
-            res.redirect('/admin/menu/front/add');
+            req.flash('error', '添加失败，' + e.message);
+            res.redirect('back');
             next(e);
         });
 });
 
-//获取"编辑后台菜单页面"
+//获取"编辑前台菜单页面"
 router.get('/edit/:_id', function (req, res, next) {
     var _id = xss(req.params._id);
 
@@ -105,6 +107,7 @@ router.get('/edit/:_id', function (req, res, next) {
 //更新菜单
 router.post('/edit/:_id', function (req, res, next) {
 
+    //csrf检查
     var _csrf = xss(req.body._csrf);
     if (!(_csrf == req.session._csrf)) {
         req.flash('error', 'Invalid Token');
@@ -135,16 +138,24 @@ router.post('/edit/:_id', function (req, res, next) {
         .updateMenuById(menu)
         .then(function (result) {
             req.flash('success', '修改成功');
-            res.redirect('/admin/menu/front/edit/'+req.body._id);
+            res.redirect('/admin/menu/front/edit/' + _id);
         })
         .catch(function(e){
-            req.flash('error', '修改失败');
-            res.redirect('/admin/menu/front');
+            req.flash('error', '修改失败，' + e.message);
+            res.redirect('back');
         });
 });
 
 //删除菜单
 router.get('/del/:_id', function (req, res, next) {
+
+    //csrf检查
+    var _csrf = xss(req.query._csrf);
+    if (!(_csrf == req.session._csrf)) {
+        req.flash('error', 'Invalid Token');
+        return res.redirect('/admin/menu/front');
+    }
+
     var _id = xss(req.params._id);
 
     FrontMenuModel
@@ -161,14 +172,13 @@ router.get('/del/:_id', function (req, res, next) {
                     res.redirect('/admin/menu/front');
                 })
                 .catch(function (e) {
-                    req.flash('error', '删除失败');
+                    req.flash('error', '删除失败，' + e.message);
                     res.redirect('/admin/menu/front');
                 });
         })
         .catch(function (e) {
             req.flash("error", e.message);
             res.redirect('/admin/menu/front');
-            next(e);
         });
 })
 

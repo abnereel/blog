@@ -1,6 +1,6 @@
 <%- include ../header %>
 
-<div class="menu-style">
+<div class="post-style">
     <nav class="inner-nav">
         <ul class="nav nav-pills">
             <li role="presentation" class="active"><a href="/admin/content/post">所有文章</a></li>
@@ -29,7 +29,7 @@
             <% for (var post of posts) { %>
             <li class="clearfix">
                 <span class="post-title"><%= post.title %></span>
-                <a class="post-del" href="javascript:void(0);" onclick="confirm(this)" url="/admin/content/post/del/<%= post._id %>">删除</a>
+                <a class="post-del" href="javascript:void(0);" onclick="confirm(this)" url="/admin/content/post/del/<%= post._id %>?_csrf=<%= _csrf %>">删除</a>
                 <a class="post-edit" href="/admin/content/post/edit/<%= post._id %>">编辑</a>
                 <span class="post-status"><%= post.status ? '显示' : '隐藏' %></span>
                 <span class="post-releaseTime"><%= post.date %></span>

@@ -17,7 +17,10 @@ router.get('/', function (req, res, next) {
         .getMenuListAll()
         .then(function (result) {
             var menuTree = Common.getMenuTree(result);
-            res.render('admin/menu/behind-list', { menuTree: menuTree });
+            res.render('admin/menu/behind-list', {
+                menuTree: menuTree,
+                _csrf: req.session._csrf
+            });
         })
         .catch(next);
 });
@@ -39,6 +42,7 @@ router.get('/add', function (req, res, next) {
 //添加后台菜单
 router.post('/add', function (req, res, next) {
 
+    //csrf检查
     var _csrf = xss(req.body._csrf);
     if (!(_csrf == req.session._csrf)) {
         req.flash('error', 'Invalid Token');
@@ -70,8 +74,8 @@ router.post('/add', function (req, res, next) {
             res.redirect('/admin/menu/behind/add');
         })
         .catch(function (e) {
-            req.flash('error', '添加失败');
-            res.redirect('/admin/menu/behind/add');
+            req.flash('error', '添加失败，' + e.message);
+            res.redirect('back');
             next(e);
         });
 });
@@ -103,6 +107,7 @@ router.get('/edit/:_id', function (req, res, next) {
 //更新菜单
 router.post('/edit/:_id', function (req, res, next) {
 
+    //csrf检查
     var _csrf = xss(req.body._csrf);
     if (!(_csrf == req.session._csrf)) {
         req.flash('error', 'Invalid Token');
@@ -133,16 +138,24 @@ router.post('/edit/:_id', function (req, res, next) {
         .updateMenuById(menu)
         .then(function (result) {
             req.flash('success', '修改成功');
-            res.redirect('/admin/menu/behind/edit/'+req.body._id);
+            res.redirect('/admin/menu/behind/edit/' + _id);
         })
         .catch(function(e){
-            req.flash('error', '修改失败');
-            res.redirect('/admin/menu/behind');
+            req.flash('error', '修改失败，' + e.message);
+            res.redirect('back');
         });
 });
 
 //删除菜单
 router.get('/del/:_id', function (req, res, next) {
+
+    //csrf检查
+    var _csrf = xss(req.query._csrf);
+    if (!(_csrf == req.session._csrf)) {
+        req.flash('error', 'Invalid Token');
+        return res.redirect('/admin/menu/behind');
+    }
+
     var _id = xss(req.params._id);
 
     BehindMenuModel
@@ -159,14 +172,13 @@ router.get('/del/:_id', function (req, res, next) {
                     res.redirect('/admin/menu/behind');
                 })
                 .catch(function (e) {
-                    req.flash('error', '删除失败');
+                    req.flash('error', '删除失败，' + e.message);
                     res.redirect('/admin/menu/behind');
                 });
         })
         .catch(function (e) {
             req.flash("error", e.message);
             res.redirect('/admin/menu/behind');
-            next(e);
         });
 })
 
