@@ -12,6 +12,8 @@ var Common = require('../../lib/Common');
 var xss = require('xss');
 var multer = require('multer');
 
+
+//文件上传配置（指定目录、文件名称、上传文件大小限制）
 var storage = multer.diskStorage({
     destination: function (req, file, cb) {
         cb(null, 'public/uploads/')
@@ -20,7 +22,10 @@ var storage = multer.diskStorage({
         cb(null,  Date.now() + file.originalname);
     }
 });
-var upload = multer({ storage: storage });
+var limits = {
+    fileSize: 10485760,
+    files: 1
+};
 
 
 //文章列表页
@@ -102,66 +107,74 @@ router.get('/add', function (req, res, next) {
 });
 
 //发布文章
-router.post('/add', upload.single('imgPath'), function (req, res, next) {
+router.post('/add', function (req, res, next) {
 
-    var _csrf = xss(req.body._csrf);
-    if (!(_csrf == req.session._csrf)) {
-        req.flash('error', 'Invalid Token');
-        return res.redirect('back');
-    }
+    var upload = multer({ storage: storage, limits: limits }).single('imgPath');
+    upload(req, res, function (err) {
+        if (err) {
+            req.flash('error', err.message);
+            return res.redirect('back');
+        } else {
+            var _csrf = xss(req.body._csrf);
+            if (!(_csrf == req.session._csrf)) {
+                req.flash('error', 'Invalid Token');
+                return res.redirect('back');
+            }
 
-    var option = xss.getDefaultWhiteList();
-    for(var o in option) {
-        option[o].push('style')
-    }
-    var myxss = new xss.FilterXSS({
-        whiteList: option
-    });
+            var option = xss.getDefaultWhiteList();
+            for(var o in option) {
+                option[o].push('style')
+            }
+            var myxss = new xss.FilterXSS({
+                whiteList: option
+            });
 
-    try {
-        if (!req.body.title) {
-            throw new Error('发布失败，标题为必填选项');
+            try {
+                if (!req.body.title) {
+                    throw new Error('发布失败，标题为必填选项');
+                }
+                if (!req.body.excerpt) {
+                    throw new Error('发布失败，描述为必填选项');
+                }
+                if (!req.body.content) {
+                    throw new Error('发布失败，内容为必填选项');
+                }
+                if (!req.body.releaseTime) {
+                    throw new Error('发布失败，发布时间为必填选项');
+                }
+            } catch (e) {
+                req.flash('error', e.message);
+                return res.redirect('back');
+            }
+
+            var post = {
+                category: xss(req.body.category),
+                title: xss(req.body.title),
+                releaseTime: new Date(xss(req.body.releaseTime)).getTime(),
+                keywords: xss(req.body.keywords),
+                source: xss(req.body.source),
+                excerpt: xss(req.body.excerpt),
+                content: myxss.process(req.body.content),
+                author: xss(req.session.user.name),
+            };
+
+            if (req.file) {
+                post.imgPath = req.file.path.substr(6);//去掉public，否则前端显示会有问题
+            }
+
+            PostModel
+                .create(post)
+                .then(function () {
+                    req.flash('success', '发布成功');
+                    res.redirect('/admin/content/post/add');
+                })
+                .catch(function (e) {
+                    req.flash('error', '发布失败');
+                    res.redirect('/admin/content/post/add');
+                    next(e);
+                });
         }
-        if (!req.body.excerpt) {
-            throw new Error('发布失败，描述为必填选项');
-        }
-        if (!req.body.content) {
-            throw new Error('发布失败，内容为必填选项');
-        }
-        if (!req.body.releaseTime) {
-            throw new Error('发布失败，发布时间为必填选项');
-        }
-    } catch (e) {
-        req.flash('error', e.message);
-        return res.redirect('back');
-    }
-
-    var post = {
-        category: xss(req.body.category),
-        title: xss(req.body.title),
-        releaseTime: new Date(xss(req.body.releaseTime)).getTime(),
-        keywords: xss(req.body.keywords),
-        source: xss(req.body.source),
-        excerpt: xss(req.body.excerpt),
-        content: myxss.process(req.body.content),
-        author: xss(req.session.user.name),
-    };
-
-    if (req.file) {
-        post.imgPath = req.file.path.substr(6);//去掉public，否则前端显示会有问题
-    }
-
-    PostModel
-        .create(post)
-        .then(function () {
-            req.flash('success', '发布成功');
-            res.redirect('/admin/content/post/add');
-        })
-        .catch(function (e) {
-            req.flash('error', '发布失败');
-            res.redirect('/admin/content/post/add');
-            next(e);
-        });
+    })
 });
 
 //编辑文章页
@@ -182,50 +195,58 @@ router.get('/edit/:_id', function (req, res, next) {
 });
 
 //更新文章
-router.post('/edit/:_id', upload.single('imgPath'), function (req, res, next) {
+router.post('/edit/:_id', function (req, res, next) {
 
-    var _csrf = xss(req.body._csrf);
-    if (!(_csrf == req.session._csrf)) {
-        req.flash('error', 'Invalid Token');
-        return res.redirect('back');
-    }
+    var upload = multer({ storage: storage, limits: limits }).single('imgPath');
+    upload(req, res, function (err) {
+        if (err) {
+            req.flash('error', err.message);
+            return res.redirect('back');
+        } else {
+            var _csrf = xss(req.body._csrf);
+            if (!(_csrf == req.session._csrf)) {
+                req.flash('error', 'Invalid Token');
+                return res.redirect('back');
+            }
 
-    var option = xss.getDefaultWhiteList();
-    for(var o in option) {
-        option[o].push('style')
-    }
-    var myxss = new xss.FilterXSS({
-        whiteList: option
-    });
+            var option = xss.getDefaultWhiteList();
+            for(var o in option) {
+                option[o].push('style')
+            }
+            var myxss = new xss.FilterXSS({
+                whiteList: option
+            });
 
-    var post = {
-        _id: xss(req.body._id),
-        category: xss(req.body.category),
-        title: xss(req.body.title),
-        releaseTime: xss(req.body.releaseTime),
-        source: xss(req.body.source),
-        keywords: xss(req.body.keywords),
-        excerpt: xss(req.body.excerpt),
-        content: myxss.process(req.body.content),
-        status: xss(req.body.status),
-        author: xss(req.session.user.name)
-    };
+            var post = {
+                _id: xss(req.body._id),
+                category: xss(req.body.category),
+                title: xss(req.body.title),
+                releaseTime: xss(req.body.releaseTime),
+                source: xss(req.body.source),
+                keywords: xss(req.body.keywords),
+                excerpt: xss(req.body.excerpt),
+                content: myxss.process(req.body.content),
+                status: xss(req.body.status),
+                author: xss(req.session.user.name)
+            };
 
-    if (req.file) {
-        post.imgPath = req.file.path.substr(6);//去掉public，否则前端显示会有问题
-    }
+            if (req.file) {
+                post.imgPath = req.file.path.substr(6);//去掉public，否则前端显示会有问题
+            }
 
-    PostModel
-        .updatePostById(post)
-        .then(function () {
-            req.flash('success', '更新成功');
-            res.redirect('/admin/content/post/edit/'+req.body._id);
-        })
-        .catch(function (e) {
-            req.flash('error', '更新失败');
-            res.redirect('/admin/content/post');
-            next(e);
-        });
+            PostModel
+                .updatePostById(post)
+                .then(function () {
+                    req.flash('success', '更新成功');
+                    res.redirect('/admin/content/post/edit/'+req.body._id);
+                })
+                .catch(function (e) {
+                    req.flash('error', '更新失败');
+                    res.redirect('/admin/content/post');
+                    next(e);
+                });
+        }
+    })
 });
 
 //删除文章

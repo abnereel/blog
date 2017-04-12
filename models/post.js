@@ -114,5 +114,18 @@ module.exports = {
             .update({ _id: _id }, {$inc: {
                 views: 1
             }})
+    },
+
+    /**
+     * 根据关键词进行模糊查询（对文章标题和关键词两个字段进行忽略大小的模糊查询）
+     * @param keyword   关键词
+     * @returns {Query}
+     */
+    getPostByKeyword: function (keyword) {
+        var query = new RegExp("^.*" + keyword + ".*$", "i");
+        return Post
+            .find({ $or: [{ title: query }, { keywords: query }] })
+            .populate({ path: 'category', model: 'FrontMenu' })
+            .sort({ releaseTime: -1 });
     }
 };

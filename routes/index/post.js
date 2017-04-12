@@ -59,8 +59,8 @@ router.get('/home', function (req, res, next) {
 //显示文章列表
 router.get('/:category', function (req, res, next) {
 
-    var page = req.query.page ? (Math.abs(parseInt(req.query.page)) > 0 ? Math.abs(parseInt(req.query.page)) : 1) : 1;
-    page = xss(page);
+    var page = xss(req.query.page);
+    page = page ? (Math.abs(parseInt(page)) > 0 ? Math.abs(parseInt(page)) : 1) : 1;
     if (isNaN(page)) {
         return next(new Error('类型错误'));
     }
@@ -169,6 +169,28 @@ router.get('/:category/:_id', function (req, res, next) {
             post: result
         });
     });
+});
+
+//搜索文章
+router.post('/search', function (req, res, next) {
+
+    var keyword = xss(req.body.keyword);
+    if (!keyword) {
+        return res.redirect('/post/home');
+    }
+    PostModel
+        .getPostByKeyword(keyword)
+        .then(function (result) {
+            result.forEach(function (item) {
+                item.date = dateformat(new Date(item.releaseTime).getTime(), 'yyyy-mm-dd');
+            });
+
+            res.render('index/search', {
+                posts: result,
+                keyword: keyword
+            });
+        })
+        .catch(next);
 });
 
 module.exports = router;

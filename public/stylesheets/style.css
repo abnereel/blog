@@ -28,51 +28,6 @@ ul {
     margin: 0 auto;
     overflow: hidden;
 }
-/*------------ nav ------------*/
-/*.nav {
-    width: 100%;
-    height: 50px;
-    line-height: 50px;
-    background: #000000;
-}
-.nav ul {
-    float: left;
-}
-.nav ul li {
-    float: left;
-    padding: 0 15px;
-}
-.nav ul li a {
-    color: #cfcfcf;
-    -webkit-transition: color linear .2s;
-    -moz-transition: color linear .2s;
-    -ms-transition: color linear .2s;
-    -o-transition: color linear .2s;
-    transition: color linear .2s;
-}
-.nav ul li a:hover {
-    color: #34a853;
-    -webkit-transition: color linear .2s;
-    -moz-transition: color linear .2s;
-    -ms-transition: color linear .2s;
-    -o-transition: color linear .2s;
-    transition: color linear .2s;
-}
-.nav ul li a.curr {
-    color: #34a853;
-}
-.nav .search {
-    float: right;
-}
-.nav .search input {
-    width: 200px;
-    height: 30px;
-    line-height: 30px;
-    text-indent: 10px;
-    border: none;
-    outline: none;
-    background-color: #efefef;
-}*/
 .error-404 {
     height: 100%;
     background: #ffffff;
@@ -107,6 +62,11 @@ ul {
     display: block;
     color: #cfcfcf;
     text-align: center;
+    -webkit-transition: color linear .3s;
+    -moz-transition: color linear .3s;
+    -ms-transition: color linear .3s;
+    -o-transition: color linear .3s;
+    transition: color linear .3s;
 
 }
 .nav > ul > li > a.curr {
@@ -114,6 +74,11 @@ ul {
 }
 .nav > ul > li > a:hover {
     color: #34a853;
+    -webkit-transition: color linear .3s;
+    -moz-transition: color linear .3s;
+    -ms-transition: color linear .3s;
+    -o-transition: color linear .3s;
+    transition: color linear .3s;
 }
 .main {
     height: 100%;
@@ -139,9 +104,24 @@ ul {
     border-radius: 40px;
     text-indent: 20px;
     font-size: 14px;
+    -webkit-transition: border linear .5s;
+    -moz-transition: border linear .5s;
+    -ms-transition: border linear .5s;
+    -o-transition: border linear .5s;
+    transition: border linear .5s;
 }
 .main > .post-area > .search input:hover {
+    -webkit-transition: border linear .5s;
+    -moz-transition: border linear .5s;
+    -ms-transition: border linear .5s;
+    -o-transition: border linear .5s;
+    transition: border linear .5s;
     border: 3px solid #34a853;
+}
+.main > .post-area > .no-search-data {
+    font-size: 24px;
+    text-align: center;
+    margin-top: 100px;
 }
 .main > .post-area > .post-content {
     padding: 0 20px;
@@ -180,9 +160,19 @@ ul {
     font-size: 22px;
     height: inherit;
     line-height: 22px;
+    -webkit-transition: color linear .3s;
+    -moz-transition: color linear .3s;
+    -ms-transition: color linear .3s;
+    -o-transition: color linear .3s;
+    transition: color linear .3s;
 }
 .main > .post-area > .post-block > .title > a:hover {
     color: #34a853;
+    -webkit-transition: color linear .3s;
+    -moz-transition: color linear .3s;
+    -ms-transition: color linear .3s;
+    -o-transition: color linear .3s;
+    transition: color linear .3s;
 }
 .main > .post-area > .post-block > .description {
     font-size: 14px;

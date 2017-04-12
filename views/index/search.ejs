@@ -1,0 +1,23 @@
+<%- include header %>
+
+<div class="main">
+    <div class="post-area">
+        <div class="search">
+            <form method="post" action="/post/search">
+                <input type="text" name="keyword" placeholder="输入关键词进行搜索" autofocus="autofocus" value="<%= keyword %>" autocomplete="off" />
+            </form>
+        </div>
+        <% if (posts.length > 0) { %>
+            <% for (var post of posts) { %>
+                <%- include ./components/post-block %>
+            <% } %>
+        <% } else { %>
+            <div class="no-search-data">很抱歉，未搜索到您需要的内容</div>
+        <% } %>
+    </div>
+    <div class="module-area">
+        <%- include ./components/introduce %>
+    </div>
+</div>
+
+<%- include footer %>

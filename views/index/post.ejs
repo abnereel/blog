@@ -3,8 +3,8 @@
 <div class="main">
     <div class="post-area">
         <div class="search">
-            <form method="post">
-                <input type="text" name="keyword" placeholder="输入关键词进行搜索" />
+            <form method="post" action="/post/search">
+                <input type="text" name="keyword" placeholder="输入关键词进行搜索" autocomplete="off" />
             </form>
         </div>
         <% for (var post of posts) { %>
