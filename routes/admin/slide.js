@@ -3,7 +3,7 @@
  */
 var express = require('express');
 var router = express.Router();
-var Common = require('../../lib/Common');
+var Common = require('../../lib/common');
 var xss = require('xss');
 var config = require('config-lite');
 var SlideModel = require('../../models/slide');

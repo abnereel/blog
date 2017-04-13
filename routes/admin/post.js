@@ -7,7 +7,7 @@ var ueditor = require('ueditor');
 var PostModel = require('../../models/post');
 var dateformat = require('dateformat');
 var config = require('config-lite');
-var Common = require('../../lib/Common');
+var Common = require('../../lib/common');
 var xss = require('xss');
 var multer = require('multer');
 

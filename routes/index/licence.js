@@ -4,7 +4,7 @@
 var express = require('express');
 var router = express.Router();
 var PostModel = require('../../models/post');
-var FrontMenuModel = require('../../models/menu-front');
+var FrontMenuModel = require('../../models/menu_front');
 var dateformat = require('dateformat');
 var async = require('async');
 

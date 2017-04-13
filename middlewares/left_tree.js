@@ -1,8 +1,8 @@
 /**
  * Created by liqian on 2017/3/9.
  */
-var Common = require('../lib/Common');
-var BehindMenuModel = require('../models/menu-behind');
+var Common = require('../lib/common');
+var BehindMenuModel = require('../models/menu_behind');
 
 //后台左侧导航菜单
 module.exports = function leftTree(req, res, next) {

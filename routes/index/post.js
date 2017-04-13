@@ -4,10 +4,10 @@
 var express = require('express');
 var router = express.Router();
 var PostModel = require('../../models/post');
-var FrontMenuModel = require('../../models/menu-front');
+var FrontMenuModel = require('../../models/menu_front');
 var dateformat = require('dateformat');
 var async = require('async');
-var Common = require('../../lib/Common');
+var Common = require('../../lib/common');
 var xss = require('xss');
 var config = require('config-lite');
 

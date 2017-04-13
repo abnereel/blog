@@ -6,18 +6,18 @@
 var path = require('path');
 var express = require('express');
 var router = express.Router();
-var Common = require('../../lib/Common');
-var FrontMenuModel = require('../../models/menu-front');
+var Common = require('../../lib/common');
+var BehindMenuModel = require('../../models/menu_behind');
 var xss = require('xss');
 
-//获取前台菜单页面
+//获取后台菜单页面
 router.get('/', function (req, res, next) {
-
-    FrontMenuModel
+ 
+    BehindMenuModel
         .getMenuListAll()
         .then(function (result) {
             var menuTree = Common.getMenuTree(result);
-            res.render('admin/menu/front-list', {
+            res.render('admin/menu/behind-list', {
                 menuTree: menuTree,
                 _csrf: req.session._csrf
             });
@@ -25,21 +25,21 @@ router.get('/', function (req, res, next) {
         .catch(next);
 });
 
-//获取"添加前台菜单页面"
+//获取"添加后台菜单页面"
 router.get('/add', function (req, res, next) {
 
-    FrontMenuModel
+    BehindMenuModel
         .getMenuList()
         .then(function (result) {
             var menuTree = Common.getMenuTree(result);
-            res.render('admin/menu/front-add', {
+            res.render('admin/menu/behind-add', {
                 menuTree: menuTree,
                 _csrf: req.session._csrf
             });
         }).catch(next);
 });
 
-//添加前台菜单
+//添加后台菜单
 router.post('/add', function (req, res, next) {
 
     //csrf检查
@@ -67,11 +67,11 @@ router.post('/add', function (req, res, next) {
         listOrder: listOrder
     };
 
-    FrontMenuModel
+    BehindMenuModel
         .create(menu)
         .then(function () {
             req.flash('success', '添加成功');
-            res.redirect('/admin/menu/front/add');
+            res.redirect('/admin/menu/behind/add');
         })
         .catch(function (e) {
             req.flash('error', '添加失败，' + e.message);
@@ -80,13 +80,13 @@ router.post('/add', function (req, res, next) {
         });
 });
 
-//获取"编辑前台菜单页面"
+//获取"编辑后台菜单页面"
 router.get('/edit/:_id', function (req, res, next) {
     var _id = xss(req.params._id);
 
     var plist = [
-        FrontMenuModel.getMenuById(_id),
-        FrontMenuModel.getMenuListAll()
+        BehindMenuModel.getMenuById(_id),
+        BehindMenuModel.getMenuListAll()
     ];
 
     Promise
@@ -95,7 +95,7 @@ router.get('/edit/:_id', function (req, res, next) {
             var menu = data[0];
             var menuTree = Common.getMenuTree(data[1]);
 
-            res.render('admin/menu/front-edit', {
+            res.render('admin/menu/behind-edit', {
                 menu: menu,
                 menuTree: menuTree,
                 _csrf: req.session._csrf
@@ -134,11 +134,11 @@ router.post('/edit/:_id', function (req, res, next) {
         listOrder: listOrder
     };
 
-    FrontMenuModel
+    BehindMenuModel
         .updateMenuById(menu)
         .then(function (result) {
             req.flash('success', '修改成功');
-            res.redirect('/admin/menu/front/edit/' + _id);
+            res.redirect('/admin/menu/behind/edit/' + _id);
         })
         .catch(function(e){
             req.flash('error', '修改失败，' + e.message);
@@ -153,32 +153,32 @@ router.get('/del/:_id', function (req, res, next) {
     var _csrf = xss(req.query._csrf);
     if (!(_csrf == req.session._csrf)) {
         req.flash('error', 'Invalid Token');
-        return res.redirect('/admin/menu/front');
+        return res.redirect('/admin/menu/behind');
     }
 
     var _id = xss(req.params._id);
 
-    FrontMenuModel
+    BehindMenuModel
         .getSubMenuById(_id)
         .then(function (result) {
             if (result.length > 0) {
                 req.flash("error", '删除失败，请先删除子菜单再删除父菜单');
-                return res.redirect('/admin/menu/front');
+                return res.redirect('/admin/menu/behind');
             }
-            FrontMenuModel
+            BehindMenuModel
                 .deleteMenuById(_id)
                 .then(function () {
                     req.flash('success', '删除成功');
-                    res.redirect('/admin/menu/front');
+                    res.redirect('/admin/menu/behind');
                 })
                 .catch(function (e) {
                     req.flash('error', '删除失败，' + e.message);
-                    res.redirect('/admin/menu/front');
+                    res.redirect('/admin/menu/behind');
                 });
         })
         .catch(function (e) {
             req.flash("error", e.message);
-            res.redirect('/admin/menu/front');
+            res.redirect('/admin/menu/behind');
         });
 })
 

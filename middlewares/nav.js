@@ -2,8 +2,8 @@
  * Created by liqian on 2017/3/13.
  */
 
-var Common = require('../lib/Common');
-var FrontMenuModel = require('../models/menu-front');
+var Common = require('../lib/common');
+var FrontMenuModel = require('../models/menu_front');
 
 module.exports = function (req, res, next) {
     FrontMenuModel
