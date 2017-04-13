@@ -63,15 +63,7 @@ module.exports = {
      */
     updateMenuById: function(menu) {
         return FrontMenu
-            .update({ _id: menu._id }, {$set: {
-                parentId: menu.parentId,
-                name: menu.name,
-                icon: menu.icon,
-                url: menu.url,
-                status: menu.status,
-                deep: menu.deep,
-                listOrder: menu.listOrder
-            }});
+            .update({ _id: menu._id }, {$set: menu});
     },
 
     /**
