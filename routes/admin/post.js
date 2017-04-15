@@ -39,8 +39,8 @@ router.get('/', function (req, res, next) {
     var skip = page ? (page-1)*limit : 0;
 
     var list = [
-        PostModel.getPostsCounts(),
-        PostModel.getPostsList(limit, skip)
+        PostModel.getPostsCountsAll(),
+        PostModel.getPostsListAll(limit, skip)
     ];
 
     Promise
@@ -76,8 +76,8 @@ router.get('/category/:category', function (req, res, next) {
     var category = xss(req.params.category);
 
     var list = [
-        PostModel.getPostsCountsByCategory(category),
-        PostModel.getPostsByCategory(category, limit, skip)
+        PostModel.getPostsCountsByCategoryAll(category),
+        PostModel.getPostsByCategoryAll(category, limit, skip)
     ];
 
     Promise
@@ -191,7 +191,7 @@ router.get('/edit/:_id', function (req, res, next) {
 
     var _id = xss(req.params._id);
     PostModel
-        .getPostById(_id)
+        .getPostByIdAll(_id)
         .then(function (result) {
             result.date = dateformat(new Date(result.releaseTime).getTime(), 'yyyy-mm-dd HH:MM:ss');
             res.render('admin/post/edit',{
@@ -291,8 +291,6 @@ router.get('/del/:_id', function (req, res, next) {
 
     //csrf检查
     var _csrf = xss(req.query._csrf);
-    console.log(_csrf);
-    console.log(req.session._csrf);
     if (_csrf != req.session._csrf) {
         req.flash('error', 'Invalid Token');
         return res.redirect('back');

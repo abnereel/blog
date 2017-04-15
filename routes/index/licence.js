@@ -26,17 +26,20 @@ router.get('/', function (req, res, next) {
             PostModel
                 .getPostsByCategory(category)
                 .then(function (result) {
-                    cb(null, result, category);
+                    cb(null, result);
                 })
                 .catch(next);
         }
-    ], function (err, result, category) {
+    ], function (err, result) {
         if (err) next(err);
-        result.forEach(function (item) {
-            item.date = dateformat(new Date(item.releaseTime).getTime(), 'yyyy-mm-dd');
-        });
-
-        var licence = result[0];//只取最新数据
+        if (result.length > 0) {
+            result.forEach(function (item) {
+                item.date = dateformat(new Date(item.releaseTime).getTime(), 'yyyy-mm-dd');
+            });
+            var licence = result[0];//只取最新数据
+        } else {
+            var licence = result;
+        }
 
         res.render('index/licence', {
             post: licence

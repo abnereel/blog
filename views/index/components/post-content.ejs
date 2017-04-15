@@ -1,7 +1,9 @@
 <div class="post-content">
-    <h3><%= post.title %></h3>
-    <time><%= post.date %></time>
-    <div><%- post.content %></div>
+    <% if (post) { %>
+        <h3><%= post.title %></h3>
+        <time><%= post.date %></time>
+        <div><%- post.content %></div>
+    <% } %>
 </div>
 <script>
     $(function () {

@@ -12,6 +12,10 @@ var xss = require('xss');
 var config = require('config-lite');
 
 //首页
+router.get('/', function (req, res, next) {
+    res.redirect('/post/home');
+});
+
 router.get('/home', function (req, res, next) {
 
     var page = xss(req.query.page);
@@ -164,7 +168,6 @@ router.get('/:category/:_id', function (req, res, next) {
             return res.redirect('/index/404');
         }
         result.date = dateformat(new Date(result.releaseTime).getTime(), 'yyyy-mm-dd HH:MM:ss');
-        //result.content = Common.html_decode(result.content);
         res.render('index/post-view', {
             post: result
         });
