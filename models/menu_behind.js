@@ -29,6 +29,16 @@ module.exports = {
     },
 
     /**
+     * 根据Url查找菜单
+     * @param url           菜单url
+     * @returns {*|Query}
+     */
+    getMenuByUrl: function (url) {
+        return BehindMenu
+            .findOne({ url: url });
+    },
+
+    /**
      * 根据_id查找指定菜单内容
      * @param _id           菜单 _id
      * @returns {*|Query}

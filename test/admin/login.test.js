@@ -1,52 +1,134 @@
 /**
  * Created by liqian on 2017/4/14.
  */
+var app = require('../../app');
 var should = require('chai').should();
 var request = require('supertest');
-var express = require('express');
-var app = require('../../app');
-
-var session = require('express-session');
-var flash = require('connect-flash');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser');
-var session = require('express-session');
-var MongoStore = require('connect-mongo')(session);
-var config = require('config-lite');
+var md5 = require('md5');
+var SessionModel = require('../../models/session');
+var UserModel = require('../../models/user');
 
 /**
  * 测试Admin模块内的login路由
  */
-var url = '';
-var _csrf = '';
+var cookie = '';
 describe('#Admin', function() {
     describe('#Login', function() {
-        app.use(cookieParser());
-        app.use(bodyParser.json());
+        before(function () {
+            //新增测试账号
+            UserModel
+                .addUser({
+                    name: 'test',
+                    password: md5('11111111')
+                })
+                .then(function () {})
+                .catch(function (e) {
+                    throw new Error(e.message);
+                });
+        });
 
-        app.use(session({
-            name: config.session.key,
-            secret: config.session.secret,
-            resave: true,
-            saveUninitialized: false,
-            cookie: {
-                maxAge: config.session.maxAge
-            },
-            store: new MongoStore({
-                url: config.mongodb
-            })
-        }));
-        app.use(flash());
+        after(function () {
+            //删除测试账号
+            UserModel
+                .deleteUser({
+                    name: 'test',
+                    password: md5('11111111')
+                })
+                .then(function () {})
+                .catch(function (e) {
+                    throw new Error(e.message);
+                });
+        });
 
-        it('respnose json object or []', function(done) {
+        it('Should be able to access the page normally', function(done) {
             request(app)
                 .get('/admin/login')
                 .expect(200)
                 .end(function (err, res) {
-                    console.log(res.locals);
-                    console.log(res.body);
-                    console.log(res.session);
+                    cookie = res.header['set-cookie'][0];
                     should.not.exist(err);
+                    res.text.should.contain('请登录账户');
+                    done();
+                });
+        });
+
+        it('Should login in failed', function (done) {
+            SessionModel
+                .findSession()
+                .then(function (result) {
+                    var session = result.toObject();
+                    var _csrf = JSON.parse(session.session)['_csrf'];
+                    var captcha = JSON.parse(session.session)['captcha'];
+
+                    request(app)
+                        .post('/admin/login')
+                        .send({
+                            name: 'test',
+                            password: '22222222',
+                            captcha: captcha,
+                            _csrf: _csrf
+                        })
+                        .set('Cookie', cookie)
+                        .expect(302)
+                        .end(function (err, res) {
+                            should.not.exist(err);
+                            res.text.should.contain('Found. Redirecting to /admin/login');
+                            done();
+                        });
+                })
+                .catch(function (e) {
+                    throw new Error(e.message);
+                });
+        });
+
+        it('Should login in successfully', function (done) {
+            SessionModel
+                .findSession()
+                .then(function (result) {
+                    var session = result.toObject();
+                    var _csrf = JSON.parse(session.session)['_csrf'];
+                    var captcha = JSON.parse(session.session)['captcha'];
+
+                    request(app)
+                        .post('/admin/login')
+                        .send({
+                            name: 'test',
+                            password: '11111111',
+                            captcha: captcha,
+                            _csrf: _csrf
+                        })
+                        .set('Cookie', cookie)
+                        .expect(302)
+                        .end(function (err, res) {
+                            should.not.exist(err);
+                            res.text.should.contain('Found. Redirecting to /admin');
+                            done();
+                        });
+                })
+                .catch(function (e) {
+                    throw new Error(e.message);
+                });
+        });
+
+        it('There should be no error', function (done) {
+            request(app)
+                .get('/admin/login/captcha')
+                .expect(200)
+                .end(function (err, res) {
+                    should.not.exist(err);
+                    res.text.should.contain('data:image/png');
+                    done();
+                });
+        });
+
+        it('Should be able to access the page normally', function (done) {
+            request(app)
+                .get('/admin')
+                .set('Cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    should.not.exist(err);
+                    res.text.should.contain('登录成功');
                     done();
                 });
         });

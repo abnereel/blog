@@ -18,8 +18,7 @@ router.get('/', function (req, res, next) {
         .then(function (result) {
             var menuTree = Common.getMenuTree(result);
             res.render('admin/menu/behind-list', {
-                menuTree: menuTree,
-                _csrf: req.session._csrf
+                menuTree: menuTree
             });
         })
         .catch(next);
@@ -33,8 +32,7 @@ router.get('/add', function (req, res, next) {
         .then(function (result) {
             var menuTree = Common.getMenuTree(result);
             res.render('admin/menu/behind-add', {
-                menuTree: menuTree,
-                _csrf: req.session._csrf
+                menuTree: menuTree
             });
         }).catch(next);
 });
@@ -70,13 +68,13 @@ router.post('/add', function (req, res, next) {
     BehindMenuModel
         .create(menu)
         .then(function () {
+            req.session._csrf = null;
             req.flash('success', '添加成功');
             res.redirect('/admin/menu/behind/add');
         })
         .catch(function (e) {
             req.flash('error', '添加失败，' + e.message);
             res.redirect('back');
-            next(e);
         });
 });
 
@@ -97,8 +95,7 @@ router.get('/edit/:_id', function (req, res, next) {
 
             res.render('admin/menu/behind-edit', {
                 menu: menu,
-                menuTree: menuTree,
-                _csrf: req.session._csrf
+                menuTree: menuTree
             });
         })
         .catch(next);
@@ -137,6 +134,7 @@ router.post('/edit/:_id', function (req, res, next) {
     BehindMenuModel
         .updateMenuById(menu)
         .then(function (result) {
+            req.session._csrf = null;
             req.flash('success', '修改成功');
             res.redirect('/admin/menu/behind/edit/' + _id);
         })
@@ -168,6 +166,7 @@ router.get('/del/:_id', function (req, res, next) {
             BehindMenuModel
                 .deleteMenuById(_id)
                 .then(function () {
+                    req.session._csrf = null;
                     req.flash('success', '删除成功');
                     res.redirect('/admin/menu/behind');
                 })

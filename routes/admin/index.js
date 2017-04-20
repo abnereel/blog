@@ -8,6 +8,7 @@ var flash = require('connect-flash');
 var MongoStore = require('connect-mongo')(session);
 var config = require('config-lite');
 var check = require('../../middlewares/check');
+var Tokens = require('csrf');
 
 router.use(session({
     name: config.session.key,
@@ -25,6 +26,14 @@ router.use(flash());
 
 //模板必须的变量，connect-flash模块的通知消息
 router.use(function (req, res, next) {
+    if (!req.session._csrf) {
+        var tokens = new Tokens();
+        var secret = tokens.secretSync()
+        var token = tokens.create(secret);
+        req.session._csrf = token;
+        //tokens.verify(secret, token);
+    }
+    res.locals._csrf = req.session._csrf;
     res.locals.user = req.session.user;
     res.locals.success = req.flash('success').toString();
     res.locals.error = req.flash('error').toString();

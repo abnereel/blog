@@ -25,5 +25,17 @@ module.exports = {
     addUser: function (user) {
         return User
             .create(user);
+    },
+
+    /**
+     * 删除用户
+     * @param user          需要删除的用户信息
+     */
+    deleteUser: function (user) {
+        return User
+            .remove({
+                name : user.name,
+                password: user.password
+            });
     }
 };

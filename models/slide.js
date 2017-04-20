@@ -22,7 +22,7 @@ module.exports = {
      */
     getSlidesList: function (limit, skip) {
         return Slide
-            .find({ status: 1 })
+            .find()
             .skip(skip)
             .limit(limit)
             .sort({ listOrder: 1 })
@@ -34,7 +34,7 @@ module.exports = {
      */
     getSlideCounts: function () {
         return Slide
-            .count({ status: 1 })
+            .count()
     },
 
     /**
@@ -54,7 +54,17 @@ module.exports = {
      */
     getSlideByCategory: function (category) {
         return Slide
-            .findOne({ category: category });
+            .find({ category: category, status: 1 });
+    },
+
+    /**
+     * 根据 category 获取幻灯片（包含隐藏）
+     * @param category      幻灯片 分类标识category
+     * @returns {Query|*}
+     */
+    getSlideByCategoryAll: function (category) {
+        return Slide
+            .find({ category: category});
     },
 
     /**

@@ -148,6 +148,15 @@ module.exports = {
     },
 
     /**
+     * 根据指定文章类型删除文章
+     * @param category  文章类型
+     */
+    deletePostByCategory: function (category) {
+        return Post
+            .remove({ category: category });
+    },
+
+    /**
      * 文章阅读次数加1
      * @param _id   文章 _id
      */

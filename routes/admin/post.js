@@ -56,8 +56,7 @@ router.get('/', function (req, res, next) {
             res.render('admin/post/list', {
                 posts: result,
                 paging: paging,
-                category: 0,
-                _csrf: req.session._csrf
+                category: 0
             });
         })
         .catch(next);
@@ -101,9 +100,7 @@ router.get('/category/:category', function (req, res, next) {
 
 //添加文章页
 router.get('/add', function (req, res, next) {
-    res.render('admin/post/add',{
-        _csrf: req.session._csrf
-    });
+    res.render('admin/post/add');
 });
 
 //发布文章
@@ -175,6 +172,7 @@ router.post('/add', function (req, res, next) {
             PostModel
                 .create(post)
                 .then(function () {
+                    req.session._csrf = null;
                     req.flash('success', '发布成功');
                     res.redirect('/admin/content/post/add');
                 })
@@ -195,8 +193,7 @@ router.get('/edit/:_id', function (req, res, next) {
         .then(function (result) {
             result.date = dateformat(new Date(result.releaseTime).getTime(), 'yyyy-mm-dd HH:MM:ss');
             res.render('admin/post/edit',{
-                post: result,
-                _csrf: req.session._csrf
+                post: result
             });
         })
         .catch(next);
@@ -275,6 +272,7 @@ router.post('/edit/:_id', function (req, res, next) {
             PostModel
                 .updatePostById(post)
                 .then(function () {
+                    req.session._csrf = null;
                     req.flash('success', '更新成功');
                     res.redirect('/admin/content/post/edit/'+req.body._id);
                 })
@@ -301,6 +299,7 @@ router.get('/del/:_id', function (req, res, next) {
     PostModel
         .deletePostById(_id)
         .then(function () {
+            req.session._csrf = null;
             req.flash('success', '删除成功');
             res.redirect('/admin/content/post');
         })

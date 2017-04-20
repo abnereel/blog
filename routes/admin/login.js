@@ -22,15 +22,8 @@ router.get('/', function (req, res, next) {
     ctx.fillText(text, 0, 26, ctx.measureText(text).width);
     req.session.captcha = text;
 
-    /*var tokens = new Tokens();
-    var secret = tokens.secretSync();
-    var token = tokens.create(secret);
-    req.session._csrf.token = token;
-    req.session._csrf.secret = secret;*/
-
     res.render('admin/login', {
-        url: canvas.toDataURL(),
-        _csrf: req.session._csrf
+        url: canvas.toDataURL()
     });
 });
 
@@ -44,7 +37,7 @@ router.post('/', function (req, res, next) {
 
     try {
         if (!(_csrf == req.session._csrf)) {
-            throw new Error('Invalid Token');
+            throw new Error('Invalid Token1');
         }
         if (!(name.length >= 1 && name.length <= 10)) {
             throw new Error('用户名限制在1-10个字符');
@@ -82,6 +75,7 @@ router.post('/', function (req, res, next) {
             result = result.toObject();
             delete result.password;
             req.session.user = result;
+            req.session._csrf = null;
             req.flash('success', '登录成功');
             res.redirect('/admin');
         })
@@ -92,7 +86,7 @@ router.post('/', function (req, res, next) {
 router.get('/add', function (req, res, next) {
     //测试账号
     var user = {
-        name: 'abner',
+        name: 'test',
         password: md5('11111111')
     };
 
@@ -109,6 +103,48 @@ router.get('/add', function (req, res, next) {
             }
             next(e);
         });
+});
+
+//测试
+router.post('/add', function (req, res, next) {
+
+    var name = xss(req.body.name);
+    var password = xss(req.body.password);
+
+    //测试账号
+    var user = {
+        name: name,
+        password: md5(password)
+    };
+
+    UserModel
+        .addUser(user)
+        .then(function (result) {
+            res.send('添加账号成功');
+            res.end();
+        })
+        .catch(next);
+});
+
+//测试
+router.post('/del', function (req, res, next) {
+    var name = xss(req.body.name);
+    var password = xss(req.body.password);
+
+    //测试账号
+    var user = {
+        name: name,
+        password: md5(password)
+    };
+
+    UserModel
+        .deleteUser(user)
+        .then(function (result) {
+            res.send('删除账号成功');
+            res.end();
+        })
+        .catch(next);
+
 });
 
 //更新验证码

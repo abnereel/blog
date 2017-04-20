@@ -50,8 +50,7 @@ router.get('/', function (req, res, next) {
 
             res.render('admin/slide/list', {
                 slides: result,
-                paging: paging,
-                _csrf: req.session._csrf
+                paging: paging
             });
         })
         .catch(next);
@@ -59,9 +58,7 @@ router.get('/', function (req, res, next) {
 
 //添加幻灯片页
 router.get('/add', function (req, res, next) {
-    res.render('admin/slide/add', {
-        _csrf: req.session._csrf
-    });
+    res.render('admin/slide/add');
 });
 
 //添加幻灯片
@@ -117,6 +114,7 @@ router.post('/add', function (req, res, next) {
             SlideModel
                 .saveSlide(slide)
                 .then(function (result) {
+                    req.session._csrf = null;
                     req.flash('success', '添加成功');
                     res.redirect('/admin/content/slide/add');
                 })
@@ -142,8 +140,7 @@ router.get('/edit/:_id', function (req, res, next) {
             }
 
             res.render('admin/slide/edit', {
-                slide: result,
-                _csrf: req.session._csrf
+                slide: result
             });
         })
         .catch(next);
@@ -205,6 +202,7 @@ router.post('/edit/:_id', function (req, res, next) {
             SlideModel
                 .updateSlideById(slide)
                 .then(function (result) {
+                    req.session._csrf = null;
                     req.flash('success', '修改成功');
                     res.redirect('/admin/content/slide/edit/' + _id);
                 })
@@ -221,8 +219,6 @@ router.get('/del/:_id', function (req, res, next) {
 
     //csrf检查
     var _csrf = xss(req.query._csrf);
-    console.log(_csrf);
-    console.log(req.session._csrf);
     if (_csrf != req.session._csrf) {
         req.flash('error', 'Invalid Token');
         return res.redirect('back');
@@ -233,6 +229,7 @@ router.get('/del/:_id', function (req, res, next) {
     SlideModel
         .deleteSlideById(_id)
         .then(function (result) {
+            req.session._csrf = null;
             req.flash('success', '删除成功');
             res.redirect('/admin/content/slide');
         })
