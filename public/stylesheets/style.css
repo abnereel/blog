@@ -146,6 +146,9 @@ ul {
     padding-bottom: 50px;
     overflow: hidden;
 }
+.main > .post-area > .post-content > div img {
+    max-width: 860px;
+}
 .main > .post-area > .post-block {
     padding: 20px;
     background: #ffffff;
@@ -212,6 +215,31 @@ ul {
     float: left;
     color: #a8a8a8;
     font-size: 12px;
+}
+.main > .post-area > .notes-block {
+    padding: 20px;
+    background: #ffffff;
+    margin: 0 20px 30px 20px;
+}
+.main > .post-area > .notes-block > .notes-content {
+    width: inherit;
+    font-size: 14px;
+    line-height: 24px;
+    text-align: justify;
+    color: #666666;
+    overflow: hidden;
+}
+.main > .post-area > .notes-block > .notes-content  img {
+    max-width: 860px;
+}
+.main > .post-area > .notes-block > .addition {
+    margin-top: 30px;
+    height: 16px;
+    line-height: 16px;
+    color: #8a8a8a;
+}
+.main > .post-area > .notes-block > .addition > .date {
+    float: right;
 }
 .main > .module-area {
     float: right;

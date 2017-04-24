@@ -111,6 +111,10 @@
     });
 
     $(function () {
+        var curDate = new Date();
+        var cdate = curDate.getFullYear().toString() + '-' + (curDate.getMonth()+1).toString() + '-' + curDate.getDate().toString();
+        var ctime = curDate.getHours().toString() + ':' + curDate.getMinutes().toString() + ':' + curDate.getSeconds();
+        $("#datetimepicker").val(cdate + ' ' + ctime);
         $('#datetimepicker').prop("readonly", true).datetimepicker();
         var ue = UE.getEditor('editor');
     });

@@ -1,0 +1,11 @@
+<!--过滤掉没有对应分类的文章-->
+<% if (post.category) { %>
+<div class="notes-block">
+    <div class="notes-content"><p><%- post.content %></p></div>
+    <div class="addition clearfix">
+        <div class="date">
+            <span><%= post.date %></span>
+        </div>
+    </div>
+</div>
+<% } %>

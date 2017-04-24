@@ -37,8 +37,8 @@ router.get('/', function (req, res, next) {
     var skip = page ? (page-1)*limit : 0;
 
     var list = [
-        SlideModel.getSlideCounts(),
-        SlideModel.getSlidesList(limit, skip)
+        SlideModel.getSlidesCounts(),
+        SlideModel.getSlidesList(null, limit, skip)
     ];
 
     Promise
@@ -130,9 +130,12 @@ router.post('/add', function (req, res, next) {
 router.get('/edit/:_id', function (req, res, next) {
 
     var _id = xss(req.params._id);
+    var where = {
+        _id: _id
+    };
 
     SlideModel
-        .getSlideById(_id)
+        .getSlide(where)
         .then(function (result) {
             if (!result) {
                 req.flash('error', '参数不正确，数据不存在！');
@@ -200,7 +203,7 @@ router.post('/edit/:_id', function (req, res, next) {
             }
 
             SlideModel
-                .updateSlideById(slide)
+                .updateSlide(slide)
                 .then(function (result) {
                     req.session._csrf = null;
                     req.flash('success', '修改成功');
@@ -225,9 +228,12 @@ router.get('/del/:_id', function (req, res, next) {
     }
 
     var _id = xss(req.params._id);
+    var where = {
+        _id: _id
+    };
 
     SlideModel
-        .deleteSlideById(_id)
+        .deleteSlide(where)
         .then(function (result) {
             req.session._csrf = null;
             req.flash('success', '删除成功');

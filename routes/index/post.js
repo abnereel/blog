@@ -26,37 +26,72 @@ router.get('/home', function (req, res, next) {
     var limit = config.page.frontLimit;
     var skip = page ? (page-1)*limit : 0;
 
-    var list = [
-        PostModel.getPostsCounts(),
-        PostModel.getPostsList(limit, skip)
-    ];
+    //查询条件
+    var where = {
+        status: 1
+    };
 
-    Promise
-        .all(list)
-        .then(function (results) {
-            var counts = results[0];
-            var result = results[1];
-            var paging = Common.paging(page, counts, limit, '/post/home', '?page', 5);
-            result.forEach(function (item) {
-                item.date = dateformat(new Date(item.releaseTime).getTime(), 'yyyy-mm-dd');
-            });
-            //过滤博客声明
-            for (var i=0; i<result.length; i++) {
-                if (result[i].category) {
-                    if (result[i].category.url == '/licence') {
-                        result.splice(i, 1);
-                    }
-                }
-            }
+    //过滤掉"博客声明"和"随笔"
+    async.waterfall([
+        function (cb) {
+            FrontMenuModel
+                .getMenuByUrl('/licence')
+                .then(function (result) {
+                    cb(null, result._id);
+                })
+                .catch(function (e) {
+                    cb(e, null);
+                });
+        },
+        function (category1, cb) {
+            FrontMenuModel
+                .getMenuByUrl('/notes')
+                .then(function (result) {
+                    cb(null, category1, result._id);
+                })
+                .catch(function (e) {
+                    cb(e, null);
+                });
+        },
+        function (category1, category2, cb) {
+            where.category = {
+                $nin: [category1, category2]
+            };
 
-            res.render('index/post', {
-                posts: result,
-                paging: paging,
-                counts: counts,
-                frontLimit: config.page.frontLimit
-            });
-        })
-        .catch(next);
+            PostModel
+                .getPostsCounts(where)
+                .then(function (result) {
+                    cb(null, result);
+                })
+                .catch(function (e) {
+                    cb(e, null);
+                });
+        },
+        function (counts, cb) {
+            PostModel
+                .getPostsList(where, limit, skip)
+                .then(function (result) {
+                    cb(null, counts, result);
+                })
+                .catch(function (e) {
+                    cb(e, null);
+                });
+        }
+    ], function (err, counts, result) {
+        if (err) {
+            next(err);
+        }
+        var paging = Common.paging(page, counts, limit, '/post/home', '?page', 5);
+        result.forEach(function (item) {
+            item.date = dateformat(item.releaseTime, 'yyyy-mm-dd');
+        });
+        res.render('index/post', {
+            posts: result,
+            paging: paging,
+            counts: counts,
+            frontLimit: config.page.frontLimit
+        });
+    });
 });
 
 
@@ -71,6 +106,11 @@ router.get('/:category', function (req, res, next) {
     var limit = config.page.frontLimit;
     var skip = page ? (page-1)*limit : 0;
 
+    //查询条件
+    var where = {
+        status: 1
+    };
+
     var url = '/post/' + xss(req.params.category);
     async.waterfall([
         function (cb) {
@@ -84,8 +124,9 @@ router.get('/:category', function (req, res, next) {
                 });
         },
         function (category, cb) {
+            where.category = category;
             PostModel
-                .getPostsCountsByCategory(category)
+                .getPostsCounts(where)
                 .then(function (counts) {
                     cb(null, category, counts);
                 })
@@ -95,7 +136,7 @@ router.get('/:category', function (req, res, next) {
         },
         function (category, counts, cb) {
             PostModel
-                .getPostsByCategory(category, limit, skip)
+                .getPostsList(where, limit, skip)
                 .then(function (result) {
                     cb(null, result, category, counts);
                 })
@@ -113,7 +154,7 @@ router.get('/:category', function (req, res, next) {
         }
         var paging = Common.paging(page, counts, limit, url, '?page', 5);
         result.forEach(function (item) {
-            item.date = dateformat(new Date(item.releaseTime).getTime(), 'yyyy-mm-dd');
+            item.date = dateformat(item.releaseTime, 'yyyy-mm-dd');
         });
         res.render('index/post', {
             posts: result,
@@ -134,10 +175,16 @@ router.get('/:category/:_id', function (req, res, next) {
         return res.redirect('/index/404');
     }
 
+    //查询条件
+    var where = {
+        status: 1,
+        _id: _id
+    };
+
     async.parallel([
         function (cb) {
             PostModel
-                .getPostById(_id)
+                .getPost(where)
                 .then(function (result) {
                     cb(null, result);
                 })
@@ -147,7 +194,7 @@ router.get('/:category/:_id', function (req, res, next) {
         },
         function (cb) {
             PostModel
-                .addPostViewCount(_id)
+                .addPostViewCount(where)
                 .then(function (result) {
                     cb(null, result);
                 })
@@ -167,7 +214,7 @@ router.get('/:category/:_id', function (req, res, next) {
         if (result === null) {
             return res.redirect('/index/404');
         }
-        result.date = dateformat(new Date(result.releaseTime).getTime(), 'yyyy-mm-dd HH:MM:ss');
+        result.date = dateformat(result.releaseTime, 'yyyy-mm-dd HH:MM:ss');
         res.render('index/post-view', {
             post: result
         });
@@ -181,19 +228,62 @@ router.post('/search', function (req, res, next) {
     if (!keyword) {
         return res.redirect('/post/home');
     }
-    PostModel
-        .getPostByKeyword(keyword)
-        .then(function (result) {
-            result.forEach(function (item) {
-                item.date = dateformat(new Date(item.releaseTime).getTime(), 'yyyy-mm-dd');
-            });
+    var query = new RegExp("^.*" + keyword + ".*$", "i");
+    var where = {
+        $or: [
+            { title: query },
+            { keywords: query }
+        ],
+        status: 1
+    };
 
-            res.render('index/search', {
-                posts: result,
-                keyword: keyword
-            });
-        })
-        .catch(next);
+    //过滤掉"博客声明"和"随笔"
+    async.waterfall([
+        function (cb) {
+            FrontMenuModel
+                .getMenuByUrl('/licence')
+                .then(function (result) {
+                    cb(null, result._id);
+                })
+                .catch(function (e) {
+                    cb(e, null);
+                });
+        },
+        function (category1, cb) {
+            FrontMenuModel
+                .getMenuByUrl('/notes')
+                .then(function (result) {
+                    cb(null, category1, result._id);
+                })
+                .catch(function (e) {
+                    cb(e, null);
+                });
+        },
+        function (category1, category2, cb) {
+            where.category = {
+                $nin: [category1, category2]
+            };
+
+            PostModel
+                .getPostByKeyword(where)
+                .then(function (result) {
+                    cb(null, result);
+                })
+                .catch(function (e) {
+                    cb(e, null);
+                });
+        }
+    ], function (err, result) {
+        result.forEach(function (item) {
+            item.date = dateformat(item.releaseTime, 'yyyy-mm-dd');
+        });
+
+        res.render('index/search', {
+            posts: result,
+            keyword: keyword
+        });
+    });
 });
+
 
 module.exports = router;

@@ -1,0 +1,20 @@
+<%- include header %>
+
+<div class="main">
+    <div class="post-area">
+        <div class="search"></div>
+        <% for (var post of posts) { %>
+            <%- include ./components/notes-block %>
+        <% } %>
+
+        <% if (counts > frontLimit) { %>
+            <%- paging %>
+        <% } %>
+    </div>
+    <div class="module-area">
+        <%- include ./components/introduce %>
+    </div>
+</div>
+
+
+<%- include footer %>

@@ -11,7 +11,7 @@ var app = require('../../app');
  */
 describe('#Index', function() {
     describe('#Post', function() {
-        it('GET /, respnose json object or []', function(done) {
+        it('Should be able to access the page normally', function(done) {
             request(app)
                 .get('/')
                 .expect(302)
@@ -21,7 +21,7 @@ describe('#Index', function() {
                 });
         });
 
-        it('GET /post, respnose json object or []', function(done) {
+        it('Should be able to access the page normally', function(done) {
             request(app)
                 .get('/post')
                 .expect(302)
@@ -31,7 +31,7 @@ describe('#Index', function() {
                 });
         });
 
-        it('GET /post/home, respnose json object or []', function(done) {
+        it('Should be able to access the page normally', function(done) {
             request(app)
                 .get('/post/home')
                 .expect(200)
@@ -41,7 +41,7 @@ describe('#Index', function() {
                 });
         });
 
-        it('GET /post/node, respnose json object or []', function(done) {
+        it('Should be able to access the page normally', function(done) {
             request(app)
                 .get('/post/node')
                 .expect(200)

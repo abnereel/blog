@@ -12,6 +12,10 @@ var async = require('async');
 //首页
 router.get('/', function (req, res, next) {
 
+    var where = {
+        status: 1
+    };
+
     var url = req.originalUrl;
     async.waterfall([
         function (cb) {
@@ -23,8 +27,9 @@ router.get('/', function (req, res, next) {
                 .catch(next);
         },
         function (category, cb) {
+            where.category = category;
             PostModel
-                .getPostsByCategory(category)
+                .getPostsList(where)
                 .then(function (result) {
                     cb(null, result);
                 })
@@ -34,7 +39,7 @@ router.get('/', function (req, res, next) {
         if (err) next(err);
         if (result.length > 0) {
             result.forEach(function (item) {
-                item.date = dateformat(new Date(item.releaseTime).getTime(), 'yyyy-mm-dd');
+                item.date = dateformat(item.releaseTime, 'yyyy-mm-dd');
             });
             var licence = result[0];//只取最新数据
         } else {

@@ -7,7 +7,10 @@ var SlideModel = require('../models/slide');
 module.exports = function rightModule(req, res, next) {
 
     var list = [
-        SlideModel.getSlideByCategory('introduce')
+        SlideModel.getSlide({
+            status: 1,
+            category: 'introduce'
+        })
     ];
 
     Promise

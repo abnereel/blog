@@ -39,8 +39,8 @@ router.get('/', function (req, res, next) {
     var skip = page ? (page-1)*limit : 0;
 
     var list = [
-        PostModel.getPostsCountsAll(),
-        PostModel.getPostsListAll(limit, skip)
+        PostModel.getPostsCounts(),
+        PostModel.getPostsList(null, limit, skip)
     ];
 
     Promise
@@ -50,7 +50,7 @@ router.get('/', function (req, res, next) {
             var result = data[1];
             var paging = Common.paging(page, counts, limit, '/admin/content/post', '?page', 5);
             result.forEach(function (item) {
-                item.date = dateformat(new Date(item.releaseTime).getTime(), 'yyyy-mm-dd HH:MM:ss');
+                item.date = dateformat(item.releaseTime, 'yyyy-mm-dd HH:MM:ss');
             });
 
             res.render('admin/post/list', {
@@ -73,10 +73,13 @@ router.get('/category/:category', function (req, res, next) {
     var limit = config.page.behindLimit;
     var skip = page ? (page-1)*limit : 0;
     var category = xss(req.params.category);
+    var where = {
+        category: category
+    }
 
     var list = [
-        PostModel.getPostsCountsByCategoryAll(category),
-        PostModel.getPostsByCategoryAll(category, limit, skip)
+        PostModel.getPostsCounts(where),
+        PostModel.getPostsList(where, limit, skip)
     ];
 
     Promise
@@ -86,7 +89,7 @@ router.get('/category/:category', function (req, res, next) {
             var result = data[1];
             var paging = Common.paging(page, counts, limit, '/admin/content/post/category/'+category, '?page', 5);
             result.forEach(function (item) {
-                item.date = dateformat(new Date(item.releaseTime).getTime(), 'yyyy-mm-dd HH:MM:ss');
+                item.date = dateformat(item.releaseTime, 'yyyy-mm-dd HH:MM:ss');
             });
 
             res.render('admin/post/list', {
@@ -188,10 +191,13 @@ router.post('/add', function (req, res, next) {
 router.get('/edit/:_id', function (req, res, next) {
 
     var _id = xss(req.params._id);
+    var where = {
+        _id: _id
+    }
     PostModel
-        .getPostByIdAll(_id)
+        .getPost(where)
         .then(function (result) {
-            result.date = dateformat(new Date(result.releaseTime).getTime(), 'yyyy-mm-dd HH:MM:ss');
+            result.date = dateformat(result.releaseTime, 'yyyy-mm-dd HH:MM:ss');
             res.render('admin/post/edit',{
                 post: result
             });
@@ -270,7 +276,7 @@ router.post('/edit/:_id', function (req, res, next) {
             }
 
             PostModel
-                .updatePostById(post)
+                .updatePost(post)
                 .then(function () {
                     req.session._csrf = null;
                     req.flash('success', '更新成功');
@@ -295,9 +301,11 @@ router.get('/del/:_id', function (req, res, next) {
     }
 
     var _id = xss(req.params._id);
-
+    var where = {
+        _id: _id
+    }
     PostModel
-        .deletePostById(_id)
+        .deletePost(where)
         .then(function () {
             req.session._csrf = null;
             req.flash('success', '删除成功');
