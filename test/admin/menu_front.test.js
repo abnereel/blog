@@ -14,7 +14,6 @@ var UserModel = require('../../models/user');
  * 测试Admin模块内的post路由
  */
 var cookie = '';
-var menu = {};
 var menuId = '';
 describe('#Admin', function () {
     describe('#Menu_Front', function () {
@@ -45,7 +44,7 @@ describe('#Admin', function () {
 
             //删除测试菜单
             FrontMenuModel
-                .deleteMenuById(menu._id)
+                .deleteMenuById(menuId)
                 .then(function () {})
                 .catch(function (e) {
                     throw new Error(e.message);

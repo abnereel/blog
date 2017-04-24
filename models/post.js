@@ -175,7 +175,7 @@ module.exports = {
     getPostByKeyword: function (keyword) {
         var query = new RegExp("^.*" + keyword + ".*$", "i");
         return Post
-            .find({ $or: [{ title: query }, { keywords: query }] })
+            .find({ $or: [{ title: query }, { keywords: query }], status: 1 })
             .populate({ path: 'category', model: 'FrontMenu' })
             .sort({ releaseTime: -1 });
     }
