@@ -7,8 +7,12 @@
                 <input type="text" name="keyword" placeholder="输入关键词进行搜索" autocomplete="off" />
             </form>
         </div>
-        <% for (var post of posts) { %>
-            <%- include ./components/post-block %>
+        <% if (posts.length > 0) { %>
+            <% for (var post of posts) { %>
+                <%- include ./components/post-block %>
+            <% } %>
+        <% } else { %>
+            <div class="no-search-data">目前暂无内容</div>
         <% } %>
 
         <% if (counts > frontLimit) { %>
