@@ -75,6 +75,7 @@ router.post('/add', function (req, res, next) {
         .catch(function (e) {
             req.flash('error', '添加失败，' + e.message);
             res.redirect('back');
+            next(e);
         });
 });
 

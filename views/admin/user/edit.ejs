@@ -1,0 +1,87 @@
+<%- include ../header %>
+
+<div class="user-style">
+    <nav class="inner-nav">
+        <ul class="nav nav-pills">
+            <li role="presentation"><a href="/admin/user">所有用户</a></li>
+            <li role="presentation"><a href="/admin/user/add">添加用户</a></li>
+            <li role="presentation"class="active"><a href="/admin/user/edit">编辑用户</a></li>
+        </ul>
+    </nav>
+
+    <div class="user-add">
+        <form method="post" id="form1">
+            <div class="input-block clearfix">
+                <label for="name">用户名称</label>
+                <input type="text" name="name" id="name" placeholder="此项必选项" value="<%= user.name %>">
+                <input type="hidden" name="_csrf" value="<%= _csrf %>">
+                <input type="hidden" name="_id" value="<%= user._id %>">
+            </div>
+
+            <div class="input-block clearfix">
+                <label for="password">用户密码</label>
+                <input type="password" name="password" id="password" placeholder="此项为必选项">
+            </div>
+
+            <div class="input-block clearfix">
+                <label for="confirmPassword">确认密码</label>
+                <input type="password" name="confirmPassword" id="confirmPassword" placeholder="此项为必选项，且必须与密码一致">
+            </div>
+
+            <div class="input-block clearfix">
+                <label for="role">用户角色</label>
+                <select name="role" id="role">
+                    <option value="1">测试账号</option>
+                    <option value="9">管理员账号</option>
+                </select>
+            </div>
+
+            <div class="input-block clearfix">
+                <label>是否有效</label>
+                <select name="status" id="status">
+                    <option value="1">有效</option>
+                    <option value="0">无效</option>
+                </select>
+            </div>
+
+            <div class="input-block clearfix">
+                <input class="submit" type="submit" value="更新">
+                <a class="goback" href="/admin/user">返回</a>
+            </div>
+        </form>
+    </div>
+</div>
+<%- include ../components/dialog-confirm %>
+<%- include ../footer %>
+<script>
+    $(function () {
+        $("#role option[value=<%= Number(user.role) %>]").attr("selected", "selected");
+        $("#status option[value=<%= Number(user.status) %>]").attr("selected", "selected");
+    });
+    $("#form1").on("submit", function () {
+        var name = $("#name").val();
+        var password = $("#password").val();
+        var confirmPassword = $("#confirmPassword").val();
+        var reg = new RegExp(/^\w+$/);
+        try {
+            if (!(name.length >= 1 && name.length <= 10)) {
+                throw new Error('用户名限制在1-10个字符');
+            }
+            if (!reg.test(name)) {
+                throw new Error('用户名只能由英文、数字、下划线组成');
+            }
+            if (!(password.length >= 6 && password.length <= 18)) {
+                throw new Error('密码限制在6-18个字符');
+            }
+            if (!reg.test(password)) {
+                throw new Error('密码只能由英文、数字、下划线组成');
+            }
+            if (!(password === confirmPassword)) {
+                throw new Error('密码和确认密码必须一致');
+            }
+        } catch(e) {
+            alert(e.message);
+            return false;
+        }
+    });
+</script>

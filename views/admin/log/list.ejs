@@ -1,0 +1,54 @@
+<%- include ../header %>
+
+<div class="log-style">
+    <nav class="inner-nav">
+        <ul class="nav nav-pills">
+            <li role="presentation" class="active"><a href="/admin/content/log">所有登录日志</a></li>
+            <li role="presentation">
+                <select id="action">
+                    <option value="0" url="/admin/content/log" selected="selected">所有日志</option>
+                    <option value="login" url="/admin/content/log/action/login">登录日志</option>
+                    <option value="logout" url="/admin/content/log/action/logout">登出日志</option>
+                    <option value="add" url="/admin/content/log/action/add">新增日志</option>
+                    <option value="edit" url="/admin/content/log/action/edit">编辑日志</option>
+                    <option value="delete" url="/admin/content/log/action/delete">删除日志</option>
+                </select>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="log-list">
+        <ul>
+            <li class="clearfix">
+                <span class="log-name">用户名</span>
+                <span class="log-time">登录时间</span>
+                <span class="log-role">角色</span>
+                <span class="log-ip">IP</span>
+                <span class="log-action">操作</span>
+            </li>
+            <% for (var log of logs) { %>
+            <li class="clearfix">
+                <span class="log-name"><%= log.name %></span>
+                <span class="log-time"><%= log.date %></span>
+                <span class="log-role"><%= log.roleName %></span>
+                <span class="log-ip"><%= log.ip %></span>
+                <span class="log-action"><%= log.action %></span>
+            </li>
+            <% } %>
+        </ul>
+        <%- paging %>
+    </div>
+</div>
+<%- include ../components/dialog-confirm %>
+<%- include ../footer %>
+<script>
+    $(function () {
+        //由于safari的selected失效，为了兼容safari特意给option[value=0]默认添加selected属性
+        $("#action option").removeAttr("selected");
+        $("#action option[value=<%= action %>]").attr("selected", "selected");
+        $("#action").on("change", function () {
+            window.location.href = $("#action option:selected").attr("url");
+        });
+    });
+</script>
+

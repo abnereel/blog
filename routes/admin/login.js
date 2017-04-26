@@ -6,10 +6,12 @@ var express = require('express');
 var router = express.Router();
 var UserModel = require('../../models/user');
 var Common = require('../../lib/common');
+var LogModel = require('../../models/log');
 var xss = require('xss');
 var md5 = require('md5');
 var ccap = require('ccap');
 var Canvas = require('canvas');
+var async = require('async');
 
 //登录页面
 router.get('/', function (req, res, next) {
@@ -64,22 +66,59 @@ router.post('/', function (req, res, next) {
         password: md5(password)
     };
 
-    UserModel
-        .findUser(user)
-        .then(function (result) {
-            if (result === null) {
-                req.flash('error', '用户名或密码错误');
-                return res.redirect('/admin/login');
-            }
-            //先将document转换成js对象
-            result = result.toObject();
-            delete result.password;
-            req.session.user = result;
-            req.session._csrf = null;
-            req.flash('success', '登录成功');
-            res.redirect('/admin');
-        })
-        .catch(next);
+    async.waterfall([
+        function (cb) {
+            UserModel
+                .findUser(user)
+                .then(function (result) {
+                    if (result === null) {
+                        var err = {
+                            message: '用户名或密码错误'
+                        };
+                        return cb(err, null);
+                    }
+                    cb(null, result);
+                })
+                .catch(function (e) {
+                    cb(e, null);
+                });
+        },
+        function (result, cb) {
+            var user = {
+                _id: result._id,
+                lastLogin: new Date()
+            };
+            UserModel
+                .updateUser(user)
+                .then(function () {
+                    cb(null, result);
+                })
+                .catch(function (e) {
+                    cb(e, null);
+                });
+        }
+    ], function (err, result) {
+        if (err) {
+            req.flash('error', err.message);
+            return res.redirect('/admin/login');
+        }
+        //先将document转换成js对象
+        result = result.toObject();
+        delete result.password;
+        req.session.user = result;
+        req.session._csrf = null;
+        req.flash('success', '登录成功');
+
+        LogModel.addLog({
+            nameId: req.session.user._id,
+            name: req.session.user.name,
+            role: req.session.user.role,
+            ip: req.connection.remoteAddress,
+            action: 'login',
+            time: new Date()
+        });
+        res.redirect('/admin');
+    });
 });
 
 //添加测试账号
@@ -163,7 +202,7 @@ router.get('/captcha', function (req, res, next) {
         canvas = new Canvas(100, 30),
         ctx = canvas.getContext('2d');
 
-    ctx.font = '30px Impact';
+    ctx.font = '24px Impact';
     ctx.fillStyle = "#5e6b84";
     ctx.fillText(text, 0, 26, ctx.measureText(text).width);
     req.session.captcha = text;

@@ -1,0 +1,37 @@
+<%- include ../header %>
+
+<div class="user-style">
+    <nav class="inner-nav">
+        <ul class="nav nav-pills">
+            <li role="presentation" class="active"><a href="/admin/user">所有用户</a></li>
+            <li role="presentation"><a href="/admin/user/add">添加用户</a></li>
+        </ul>
+    </nav>
+
+    <div class="user-list">
+        <ul>
+            <li class="clearfix">
+                <span class="user-name">用户名</span>
+                <span class="user-del">删除</span>
+                <span class="user-edit">编辑</span>
+                <span class="user-status">状态</span>
+                <span class="user-lastLogin">最后登录时间</span>
+                <span class="user-role">角色</span>
+            </li>
+            <% for (var user of users) { %>
+            <li class="clearfix">
+                <span class="user-name"><%= user.name %></span>
+                <a class="user-del" href="javascript:void(0);" onclick="confirm(this)" url="/admin/user/del/<%= user._id %>?_csrf=<%= _csrf %>">删除</a>
+                <a class="user-edit" href="/admin/user/edit/<%= user._id %>">编辑</a>
+                <span class="user-status"><%= user.status ? '有效' : '无效' %></span>
+                <span class="user-lastLogin"><%= user.lastLoginTime %></span>
+                <span class="user-role"><%= user.roleName %></span>
+            </li>
+            <% } %>
+        </ul>
+        <%- paging %>
+    </div>
+</div>
+<%- include ../components/dialog-confirm %>
+<%- include ../footer %>
+

@@ -48,6 +48,8 @@ router.use('/menu/behind', check.checkLogin, require('./menu_behind'));//后台�
 router.use('/menu/front', check.checkLogin, require('./menu_front'));//前台菜单页
 router.use('/content/post', check.checkLogin, require('./post'));//文章管理页
 router.use('/content/slide', check.checkLogin, require('./slide'));//文章管理页
+router.use('/content/log', check.checkLogin, require('./log'));//日志管理
+router.use('/user', check.checkLogin, require('./user'));//用户管理
 router.use(function (req, res) {
     res.render('admin/404');
 });

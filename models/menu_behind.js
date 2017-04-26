@@ -72,6 +72,6 @@ module.exports = {
      */
     deleteMenuById: function(_id) {
         return BehindMenu
-            .remove({ _id: _id });
+            .deleteOne({ _id: _id });
     }
 }

@@ -64,6 +64,8 @@ module.exports = {
      */
     deleteSlide: function (where) {
         return Slide
-            .remove(where);
+            .deleteOne({
+                _id: where._id
+            });
     }
 }

@@ -21,7 +21,7 @@ describe('#Admin', function () {
             //新增测试账号
             UserModel
                 .addUser({
-                    name: 'test',
+                    name: 'test999',
                     password: md5('11111111')
                 })
                 .then(function () {})
@@ -34,7 +34,7 @@ describe('#Admin', function () {
             //删除测试账号
             UserModel
                 .deleteUser({
-                    name: 'test',
+                    name: 'test999',
                     password: md5('11111111')
                 })
                 .then(function () {})
@@ -76,7 +76,7 @@ describe('#Admin', function () {
                     request(app)
                         .post('/admin/login')
                         .send({
-                            name: 'test',
+                            name: 'test999',
                             password: '11111111',
                             captcha: captcha,
                             _csrf: _csrf

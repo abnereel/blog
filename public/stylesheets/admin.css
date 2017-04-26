@@ -1,6 +1,7 @@
 body {
     font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
     background: #F1F2F7;
+    min-width: 1280px;
 }
 * {
     margin: 0;
@@ -34,6 +35,7 @@ ul {
     left: 0;
     z-index: 1002;
     width: 100%;
+    min-width: 1280px;
     height: 60px;
     line-height: 60px;
     background: #ffffff;
@@ -197,11 +199,13 @@ ul {
 .inner-nav {
     height: 60px;
     border-bottom: 1px solid #aeb2b7;
+    min-width: 500px;
 }
 /*------------ components ------------*/
 .paging {
     position: absolute;
     bottom: 20px;
+    min-width: 500px;
 }
 .paging > span {
     border: 1px solid #CCCCCC;
@@ -909,9 +913,183 @@ ul {
     border-bottom-right-radius: 15px;
     outline: none;
 }
-
-
-
+.user-list > ul > li {
+    margin-bottom: 15px;
+    background: #cccccc;
+    height: 30px;
+    line-height: 30px;
+    min-width: 1000px;
+}
+.user-list > ul > li > a,
+.user-list > ul > li > span {
+    display: block;
+    overflow: hidden;
+    text-align: center;
+    margin-right: 15px;
+}
+.user-list > ul > li > a {
+    background: #34a853;
+    color: #ffffff;
+    -webkit-border-radius: 4px;;
+    -moz-border-radius: 4px;;
+    border-radius: 4px;
+}
+.user-list > ul > li > .user-name {
+    float: left;
+    width: 400px;
+    text-align: left;
+    margin-left: 15px;
+}
+.user-list > ul > li > .user-role {
+    float: right;
+    width: 100px;
+    height: inherit;
+    overflow: hidden;
+}
+.user-list > ul > li > .user-lastLogin {
+    float: right;
+    width: 200px;
+    height: inherit;
+    overflow: hidden;
+}
+.user-list > ul > li > .user-status {
+    float: right;
+    width: 40px;
+}
+.user-list > ul > li > .user-edit {
+    float: right;
+    width: 50px;
+}
+.user-list > ul > li > .user-del {
+    float: right;
+    width: 50px;
+}
+.user-add {
+    margin-top: 30px;
+}
+.user-add .input-block {
+    width: 1000px;
+    margin-bottom: 20px;
+}
+.user-add .input-block > label {
+    float: left;
+    width: 80px;
+    text-align: right;
+    height: 40px;
+    line-height: 40px;
+}
+.user-add .input-block > select,
+.user-add .input-block > input {
+    float: left;
+    width: 300px;
+    height: 40px;
+    line-height: 40px;
+    text-indent: 10px;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    border: 1px solid #cccccc;
+    margin-left: 20px;
+    background: #F8F8F8;
+}
+.user-add .input-block-file > .div-file > .input-file {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    opacity: 0;
+    cursor: pointer;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+.user-add .input-block > .submit {
+    float: left;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    background: #34a853;
+    color: #ffffff;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    text-align: center;
+    margin-left: 100px;
+    margin-top: 30px;
+}
+.user-add .input-block > .goback {
+    float: left;
+    display: block;
+    width: 100px;
+    height: 40px;
+    line-height: 40px;
+    background: #F0AD4E;
+    color: #ffffff;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+    margin-left: 20px;
+    text-align: center;
+    margin-top: 30px;
+}
+.log-list > ul > li {
+    margin-bottom: 15px;
+    background: #cccccc;
+    height: 30px;
+    line-height: 30px;
+    min-width: 1000px;
+}
+.log-list > ul > li > a,
+.log-list > ul > li > span {
+    display: block;
+    overflow: hidden;
+    text-align: center;
+    margin-right: 15px;
+}
+.log-list > ul > li > a {
+    background: #34a853;
+    color: #ffffff;
+    -webkit-border-radius: 4px;;
+    -moz-border-radius: 4px;;
+    border-radius: 4px;
+}
+.log-list > ul > li > .log-name {
+    float: left;
+    width: 200px;
+    text-align: left;
+    margin-left: 15px;
+}
+.log-list > ul > li > .log-role {
+    float: right;
+    width: 80px;
+    height: inherit;
+    overflow: hidden;
+    text-align: center;
+}
+.log-list > ul > li > .log-ip {
+    float: right;
+    width: 150px;
+    height: inherit;
+    overflow: hidden;
+    text-align: center;
+}
+.log-list > ul > li > .log-action {
+    float: right;
+    width: 100px;
+    height: inherit;
+    overflow: hidden;
+    text-align: center;
+}
+.log-list > ul > li > .log-time {
+    float: right;
+    width: 200px;
+    height: inherit;
+    overflow: hidden;
+    text-align: center;
+}
 
 
 

@@ -228,6 +228,7 @@ router.post('/search', function (req, res, next) {
     if (!keyword) {
         return res.redirect('/post/home');
     }
+    //对文章标题和关键词两个字段进行忽略大小的模糊查询
     var query = new RegExp("^.*" + keyword + ".*$", "i");
     var where = {
         $or: [

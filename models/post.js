@@ -62,7 +62,9 @@ module.exports = {
      */
     deletePost: function (where) {
         return Post
-            .remove(where);
+            .deleteOne({
+                _id: where._id
+            });
     },
 
     /**
@@ -77,7 +79,7 @@ module.exports = {
     },
 
     /**
-     * 根据关键词进行模糊查询（对文章标题和关键词两个字段进行忽略大小的模糊查询）
+     * 根据关键词进行模糊查询
      * @param keyword   关键词
      */
     getPostByKeyword: function (where) {
