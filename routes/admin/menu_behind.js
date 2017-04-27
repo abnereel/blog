@@ -68,7 +68,6 @@ router.post('/add', function (req, res, next) {
     BehindMenuModel
         .create(menu)
         .then(function () {
-            req.session._csrf = null;
             req.flash('success', '添加成功');
             res.redirect('/admin/menu/behind/add');
         })
@@ -135,7 +134,6 @@ router.post('/edit/:_id', function (req, res, next) {
     BehindMenuModel
         .updateMenuById(menu)
         .then(function (result) {
-            req.session._csrf = null;
             req.flash('success', '修改成功');
             res.redirect('/admin/menu/behind/edit/' + _id);
         })
@@ -167,7 +165,6 @@ router.get('/del/:_id', function (req, res, next) {
             BehindMenuModel
                 .deleteMenuById(_id)
                 .then(function () {
-                    req.session._csrf = null;
                     req.flash('success', '删除成功');
                     res.redirect('/admin/menu/behind');
                 })

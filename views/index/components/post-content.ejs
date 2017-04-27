@@ -7,8 +7,13 @@
 </div>
 <script>
     $(function () {
-        if ($(".post-content").height() < $(".post-content").parent().height()) {
-            $(".post-content").height($(".post-content").parent().height());
+        if ($(".post-content").height() > $(".post-view").height()) {
+            $(".post-view").height($(".post-content").height());
+        }
+    });
+    $(window).on("resize", function () {
+        if ($(".post-content").height() > $(".post-view").height()) {
+            $(".post-view").height($(".post-content").height());
         }
     });
 </script>

@@ -68,7 +68,6 @@ router.post('/add', function (req, res, next) {
     FrontMenuModel
         .create(menu)
         .then(function (result) {
-            req.session._csrf = null;
             req.flash('success', '添加成功');
             res.redirect('/admin/menu/front/add');
         })
@@ -134,7 +133,6 @@ router.post('/edit/:_id', function (req, res, next) {
     FrontMenuModel
         .updateMenuById(menu)
         .then(function (result) {
-            req.session._csrf = null;
             req.flash('success', '修改成功');
             res.redirect('/admin/menu/front/edit/' + _id);
         })
@@ -166,7 +164,6 @@ router.get('/del/:_id', function (req, res, next) {
             FrontMenuModel
                 .deleteMenuById(_id)
                 .then(function () {
-                    req.session._csrf = null;
                     req.flash('success', '删除成功');
                     res.redirect('/admin/menu/front');
                 })

@@ -44,7 +44,7 @@ describe('#Admin', function () {
 
             //删除测试幻灯片
             SlideModel
-                .deleteSlideById(slideId)
+                .deleteSlide({ _id: slideId })
                 .then(function () {})
                 .catch(function (e) {
                     throw new Error(e.message);
@@ -91,6 +91,7 @@ describe('#Admin', function () {
                 })
                 .catch(function (e) {
                     throw new Error(e.message);
+                    done();
                 });
         });
 
@@ -157,7 +158,7 @@ describe('#Admin', function () {
         it('Should be able to access the page normally', function (done) {
 
             SlideModel
-                .getSlideByCategoryAll('test-999')
+                .getSlidesList({ category: 'test-999' })
                 .then(function (result) {
                     slideId = result[0]._id;
                     request(app)
@@ -169,10 +170,10 @@ describe('#Admin', function () {
                             res.text.should.contain('分类标识');
                             done();
                         });
-
                 })
                 .catch(function (e) {
                     throw new Error(e.message);
+                    done();
                 });
         });
 
@@ -206,6 +207,7 @@ describe('#Admin', function () {
                 })
                 .catch(function (e) {
                     throw new Error(e.message);
+                    done();
                 });
         });
 
@@ -241,6 +243,7 @@ describe('#Admin', function () {
                 })
                 .catch(function (e) {
                     throw new Error(e.message);
+                    done();
                 });
         });
     });

@@ -72,7 +72,7 @@ router.post('/add', function (req, res, next) {
     var _csrf = xss(req.body._csrf);
     if( _csrf != req.session._csrf ) {
         req.flash('error', 'Invalid Token');
-        res.redirect('back');
+        return res.redirect('back');
     }
 
     //xss过滤数据
@@ -114,7 +114,6 @@ router.post('/add', function (req, res, next) {
     UserModel
         .addUser(user)
         .then(function () {
-            req.session._csrf = null;
             req.flash('success', '添加用户成功');
             res.redirect('/admin/user/add');
         })
@@ -152,7 +151,7 @@ router.post('/edit/:id', function (req, res, next) {
     var _csrf = xss(req.body._csrf);
     if( _csrf != req.session._csrf ) {
         req.flash('error', 'Invalid Token');
-        res.redirect('back');
+        return res.redirect('back');
     }
 
     //xss过滤数据
@@ -196,7 +195,6 @@ router.post('/edit/:id', function (req, res, next) {
     UserModel
         .updateUser(user)
         .then(function () {
-            req.session._csrf = null;
             //若更新的用户与当前登录的用户是同一个用户，则需退出重新登录
             if (user._id === req.session.user._id) {
                 req.session.user = null;
@@ -204,7 +202,7 @@ router.post('/edit/:id', function (req, res, next) {
                 res.redirect('/admin/login');
             } else {
                 req.flash('success', '更新用户信息成功');
-                res.redirect('/admin/user');
+                res.redirect('/admin/user/edit/' + _id);
             }
         })
         .catch(next);
@@ -217,7 +215,7 @@ router.get('/del/:_id', function (req, res, next) {
     var _csrf = xss(req.query._csrf);
     if( _csrf != req.session._csrf ) {
         req.flash('error', 'Invalid Token');
-        res.redirect('back');
+        return res.redirect('back');
     }
 
     //xss过滤数据
@@ -261,7 +259,6 @@ router.get('/del/:_id', function (req, res, next) {
                 })
         }
     ], function (err, result) {
-        req.session._csrf = null;
         if (err) {
             req.flash('error', err.message);
             return res.redirect('/admin/user');

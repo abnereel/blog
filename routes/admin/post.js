@@ -124,7 +124,8 @@ router.post('/add', function (req, res, next) {
 
             var option = xss.getDefaultWhiteList();
             for(var o in option) {
-                option[o].push('style')
+                option[o].push('style');
+                option[o].push('class');
             }
             var myxss = new xss.FilterXSS({
                 whiteList: option
@@ -175,7 +176,6 @@ router.post('/add', function (req, res, next) {
             PostModel
                 .create(post)
                 .then(function () {
-                    req.session._csrf = null;
                     req.flash('success', '发布成功');
                     res.redirect('/admin/content/post/add');
                 })
@@ -223,7 +223,8 @@ router.post('/edit/:_id', function (req, res, next) {
 
             var option = xss.getDefaultWhiteList();
             for(var o in option) {
-                option[o].push('style')
+                option[o].push('style');
+                option[o].push('class');
             }
             var myxss = new xss.FilterXSS({
                 whiteList: option
@@ -237,6 +238,7 @@ router.post('/edit/:_id', function (req, res, next) {
             var source = xss(req.body.source);
             var excerpt = xss(req.body.excerpt);
             var content = myxss.process(req.body.content);
+            var content = req.body.content;
             var status = xss(req.body.status);
             var author = xss(req.session.user.name);
 
@@ -278,7 +280,6 @@ router.post('/edit/:_id', function (req, res, next) {
             PostModel
                 .updatePost(post)
                 .then(function () {
-                    req.session._csrf = null;
                     req.flash('success', '更新成功');
                     res.redirect('/admin/content/post/edit/'+req.body._id);
                 })
@@ -303,11 +304,10 @@ router.get('/del/:_id', function (req, res, next) {
     var _id = xss(req.params._id);
     var where = {
         _id: _id
-    }
+    };
     PostModel
         .deletePost(where)
         .then(function () {
-            req.session._csrf = null;
             req.flash('success', '删除成功');
             res.redirect('/admin/content/post');
         })

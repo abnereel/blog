@@ -18,9 +18,12 @@ module.exports = {
      * 获取日志列表
      * @param where     查询条件
      */
-    getLogsList: function (where) {
+    getLogsList: function (where, limit, skip) {
         return Log
-            .find(where);
+            .find(where)
+            .skip(skip)
+            .limit(limit)
+            .sort({ time: -1 });
     },
 
     /**

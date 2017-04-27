@@ -106,7 +106,6 @@ router.post('/', function (req, res, next) {
         result = result.toObject();
         delete result.password;
         req.session.user = result;
-        req.session._csrf = null;
         req.flash('success', '登录成功');
 
         LogModel.addLog({

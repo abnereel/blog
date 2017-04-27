@@ -114,7 +114,6 @@ router.post('/add', function (req, res, next) {
             SlideModel
                 .saveSlide(slide)
                 .then(function (result) {
-                    req.session._csrf = null;
                     req.flash('success', '添加成功');
                     res.redirect('/admin/content/slide/add');
                 })
@@ -205,7 +204,6 @@ router.post('/edit/:_id', function (req, res, next) {
             SlideModel
                 .updateSlide(slide)
                 .then(function (result) {
-                    req.session._csrf = null;
                     req.flash('success', '修改成功');
                     res.redirect('/admin/content/slide/edit/' + _id);
                 })
@@ -235,7 +233,6 @@ router.get('/del/:_id', function (req, res, next) {
     SlideModel
         .deleteSlide(where)
         .then(function (result) {
-            req.session._csrf = null;
             req.flash('success', '删除成功');
             res.redirect('/admin/content/slide');
         })

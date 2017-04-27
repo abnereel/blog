@@ -1,5 +1,5 @@
 /**
- * Created by liqian on 2017/4/18.
+ * Created by liqian on 2017/4/27.
  */
 
 var should = require('chai').should();
@@ -7,18 +7,15 @@ var request = require('supertest');
 var app = require('../../app');
 var md5 = require('md5');
 var SessionModel = require('../../models/session');
-var FrontMenuModel = require('../../models/menu_front');
 var UserModel = require('../../models/user');
-var PostModel = require('../../models/post');
 
 /**
- * 测试Admin模块内的post路由
+ * 测试Admin模块内的user路由
  */
 var cookie = '';
-var menu = {};
-var postId = '';
+var nameId = '';
 describe('#Admin', function () {
-    describe('#Post', function () {
+    describe('#User', function () {
         before(function () {
             //新增测试账号
             UserModel
@@ -27,24 +24,6 @@ describe('#Admin', function () {
                     password: md5('11111111')
                 })
                 .then(function () {})
-                .catch(function (e) {
-                    throw new Error(e.message);
-                });
-
-            //新增测试菜单
-            FrontMenuModel
-                .create({
-                    parentId : '000000000000000000000000',
-                    name : '测试菜单',
-                    url: '/post/testmenu',
-                    icon: '',
-                    status: 0,
-                    deep: 1,
-                    listOrder: 1
-                })
-                .then(function (result) {
-                    menu = result;
-                })
                 .catch(function (e) {
                     throw new Error(e.message);
                 });
@@ -57,22 +36,6 @@ describe('#Admin', function () {
                     name: 'test999',
                     password: md5('11111111')
                 })
-                .then(function () {})
-                .catch(function (e) {
-                    throw new Error(e.message);
-                });
-
-            //删除测试菜单
-            FrontMenuModel
-                .deleteMenuById(menu._id)
-                .then(function () {})
-                .catch(function (e) {
-                    throw new Error(e.message);
-                });
-
-            //删除测试文章
-            PostModel
-                .deletePost({ _id: postId })
                 .then(function () {})
                 .catch(function (e) {
                     throw new Error(e.message);
@@ -92,7 +55,7 @@ describe('#Admin', function () {
                 });
         });
 
-        //测试登录功能 - 登录后才能进行后续操纵
+        //测试登录功能 - 登录后才能继续后续操作
         it('Should login in successfully', function (done) {
             SessionModel
                 .findSession()
@@ -119,36 +82,37 @@ describe('#Admin', function () {
                 })
                 .catch(function (e) {
                     throw new Error(e.message);
-                });
-        });
-
-        //测试获取所有文章
-        it('Should be able to access the page normally', function (done) {
-            request(app)
-                .get('/admin/content/post')
-                .set('Cookie', cookie)
-                .expect(200)
-                .end(function (err, res) {
-                    should.not.exist(err);
-                    res.text.should.contain('所有文章');
                     done();
                 });
         });
 
-        //测试添加文章页
+        //测试获取所有用户页面
         it('Should be able to access the page normally', function (done) {
             request(app)
-                .get('/admin/content/post/add')
+                .get('/admin/user')
                 .set('Cookie', cookie)
                 .expect(200)
                 .end(function (err, res) {
                     should.not.exist(err);
-                    res.text.should.contain('文章标题');
+                    res.text.should.contain('所有用户');
                     done();
                 });
         });
 
-        //测试添加文章功能
+        //测试添加用户页面
+        it('Should be able to access the page normally', function (done) {
+            request(app)
+                .get('/admin/user/add')
+                .set('Cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    should.not.exist(err);
+                    res.text.should.contain('用户密码');
+                    done();
+                });
+        });
+
+        //测试添加用户
         it('Data should be saved correctly', function (done) {
             SessionModel
                 .findSession()
@@ -156,57 +120,53 @@ describe('#Admin', function () {
                     var session = result.toObject();
                     var _csrf = JSON.parse(session.session)['_csrf'];
                     request(app)
-                        .post('/admin/content/post/add')
+                        .post('/admin/user/add')
                         .set('Cookie', cookie)
                         .send({
                             _csrf: _csrf,
-                            category: menu._id,
-                            title: 'test-999',
-                            releaseTime: new Date().getTime(),
-                            keywords: 'test-999',
-                            source: 'test-999',
-                            excerpt: 'test-999',
-                            content: 'test-999',
-                            author: 'test-999'
+                            name: 'test888',
+                            password: '11111111',
+                            confirmPassword: '11111111',
+                            role: 1,
+                            status: 0
                         })
                         .expect(302)
                         .end(function (err, res) {
                             should.not.exist(err);
-                            res.text.should.contain('Found. Redirecting to /admin/content/post/add');
+                            res.text.should.contain('Found. Redirecting to /admin/user/add');
                             done();
                         });
                 })
                 .catch(function (e) {
                     throw new Error(e.message);
-                    //should.Throw(e);
                     done();
-                })
+                });
         });
 
-        //测试更新文章页
+        //测试更新用户页面
         it('Should be able to access the page normally', function (done) {
 
-            PostModel
-                .getPost({ category: menu._id })
+            UserModel
+                .findUser({ name: 'test888' })
                 .then(function (result) {
-                    postId = result._id;
+                    nameId = result._id;
                     request(app)
-                        .get('/admin/content/post/edit/' + postId)
+                        .get('/admin/user/edit/' + nameId)
                         .set('Cookie', cookie)
                         .expect(200)
                         .end(function (err, res) {
                             should.not.exist(err);
-                            res.text.should.contain('文章标题');
+                            res.text.should.contain('用户密码');
                             done();
                         });
-
                 })
                 .catch(function (e) {
                     throw new Error(e.message);
+                    done();
                 });
         });
 
-        //测试更新文章功能
+        //测试更新用户
         it('Data should be updated correctly', function (done) {
             SessionModel
                 .findSession()
@@ -214,69 +174,64 @@ describe('#Admin', function () {
                     var session = result.toObject();
                     var _csrf = JSON.parse(session.session)['_csrf'];
                     request(app)
-                        .post('/admin/content/post/edit/' + postId)
+                        .post('/admin/user/edit/' + nameId)
                         .set('Cookie', cookie)
                         .send({
-                            _id: postId,
                             _csrf: _csrf,
-                            category: menu._id,
-                            title: 'test-666',
-                            releaseTime: new Date().getTime(),
-                            keywords: 'test-666',
-                            source: 'test-666',
-                            excerpt: 'test-666',
-                            content: 'test-666',
-                            author: 'test-666'
+                            _id: nameId,
+                            name: 'test888',
+                            password: '11111111',
+                            confirmPassword: '11111111',
+                            role: 1,
+                            status: 0
                         })
                         .expect(302)
                         .end(function (err, res) {
+                            console.log(res.text);
                             should.not.exist(err);
-                            res.text.should.contain('Found. Redirecting to /admin/content/post/edit/' + postId);
+                            res.text.should.contain('Found. Redirecting to /admin/user/edit/' + nameId);
                             done();
                         });
-
                 })
                 .catch(function (e) {
                     throw new Error(e.message);
+                    done();
                 });
         });
 
-        //测试获取某个分类文章 --- 此次访问时为了下次的删除测试做准备（获取_csrf）
+        //测试获取所有用户页面 --- 此次访问时为了下次的删除测试做准备
         it('Should be able to access the page normally', function (done) {
-            if (menu._id) {
-                request(app)
-                    .get('/admin/content/post/category/' + menu._id)
-                    .set('Cookie', cookie)
-                    .expect(200)
-                    .end(function (err, res) {
-                        should.not.exist(err);
-                        res.text.should.contain('所有文章');
-                        done();
-                    });
-            } else {
-                done();
-            }
+            request(app)
+                .get('/admin/user')
+                .set('Cookie', cookie)
+                .expect(200)
+                .end(function (err, res) {
+                    should.not.exist(err);
+                    res.text.should.contain('所有用户');
+                    done();
+                });
         });
 
-        //测试删除文章功能
-        it('Should be able to delete the post', function (done) {
+        //测试删除用户功能
+        it('Should be able to delete the slide', function (done) {
             SessionModel
                 .findSession()
                 .then(function (result) {
                     var session = result.toObject();
                     var _csrf = JSON.parse(session.session)['_csrf'];
                     request(app)
-                        .get('/admin/content/post/del/' + postId + '?_csrf=' + _csrf)
+                        .get('/admin/user/del/' + nameId + '?_csrf=' + _csrf)
                         .set('Cookie', cookie)
                         .expect(302)
                         .end(function (err, res) {
                             should.not.exist(err);
-                            res.text.should.contain('Found. Redirecting to /admin/content/post');
+                            res.text.should.contain('Found. Redirecting to /admin/user');
                             done();
                         });
                 })
                 .catch(function (e) {
                     throw new Error(e.message);
+                    done();
                 });
         });
     });

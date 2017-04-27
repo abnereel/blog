@@ -85,13 +85,16 @@ ul {
     height: 100%;
     padding-left: 100px;
 }
+.main > .post-view {
+    background: #ffffff;
+}
 .main > .post-area {
     float: left;
     width: 60%;
     height: inherit;
 }
 .main > .post-area > .search {
-    margin: 30px 20px;
+    margin: 20px 0 20px 20px;
 }
 .main > .post-area > .search input {
     display: block;
@@ -153,7 +156,7 @@ ul {
 .main > .post-area > .post-block {
     padding: 20px;
     background: #ffffff;
-    margin: 0 20px 30px 20px;
+    margin: 0 0 30px 20px;
 }
 .main > .post-area > .post-block > .title {
     width: inherit;
@@ -247,7 +250,7 @@ ul {
     width: 40%;
 }
 .main > .module-area > .introduct {
-    margin: 30px 20px 30px 0px;
+    margin: 20px 20px 20px 20px;
     background: #e9e8dd;
     padding: 20px;
 }
